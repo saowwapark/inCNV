@@ -1,0 +1,57 @@
+version: '2.4'
+services:
+  incnv-db:
+    image: sakkayaphab/incnv-db:latest
+    container_name: incnv-db
+    restart: always
+    networks:
+      - incnv-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - incnv-volume:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=root
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost","-u","root","--password=root"]
+      timeout: 20s
+      retries: 10
+  incnv-frontend:
+    image: saowwapark/incnv-frontend:latest
+    container_name: incnv-frontend
+    restart: always
+    networks:
+      - incnv-network
+  incnv-backend:
+    image: saowwapark/incnv-backend:latest
+    container_name: incnv-backend
+    restart: always
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - HOST=0.0.0.0
+      - DB_HOST=incnv-db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+    networks:
+      - incnv-network
+    depends_on:
+      incnv-db:
+        condition: service_healthy
+  incnv-reverse-proxy:
+    image: sakkayaphab/incnv-reverse-proxy:latest
+    container_name: incnv-reverse-proxy
+    ports:
+      - 7000:80
+    networks:
+      - incnv-network
+    depends_on:
+      incnv-db:
+        condition: service_healthy
+
+volumes:
+  incnv-volume:
+
+networks:
+  incnv-network: {}
