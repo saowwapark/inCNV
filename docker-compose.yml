@@ -20,6 +20,8 @@ services:
       - DB_PASSWORD=rootpassword
     networks:
       - incnv-network
+    volumes:
+      - incnv-backend-volume:/usr/src/app/src/datasource/
     depends_on:
       incnv-db:
         condition: service_healthy
@@ -53,6 +55,7 @@ services:
 
 volumes:
   incnv-volume:
+  incnv-backend-volume:
 
 networks:
   incnv-network: {}
