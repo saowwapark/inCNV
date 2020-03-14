@@ -37,6 +37,8 @@ services:
       - incnv-volume:/var/lib/mysql
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u root --password=rootpassword
+    ports:
+      - 7004:3306
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost","-u","root","--password=rootpassword"]
       timeout: 20s
