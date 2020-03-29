@@ -90,6 +90,7 @@ The ‘sample set’ allows users to define a group of samples they are interest
 Users have to choose interesting criteria to analyze.
 
 - **For individaul sample analysis:** criteria namely a reference genome, a sample set, a sample name, many files, a CNV type and a chromosome.
+  ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_analysis_config.png)
   // image
 - **multiple sample analysis:** criteria namely a reference genome, a sample set, many sample names, one file, a CNV type and a chromosome.
   // image
