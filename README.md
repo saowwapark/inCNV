@@ -65,7 +65,7 @@ inCNV has data flow diagram (DFD) as below;
 
 Before using inCNV, users have to upload CNV results from any CNV detector tool that matches with the ‘CNV tool mapping’ and ‘sample set’ which need to be configured by the users before their upload.
 // input file example
-// upload dialog example
+![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/upload_file.png)
 
 - The format of input file has to be tab-delimitted format.
 - The file has to at least 5 columns represeting data: sample name, chromosome, start basepair, end basepair and cnv type.
@@ -73,7 +73,7 @@ Before using inCNV, users have to upload CNV results from any CNV detector tool 
 ### File mapping
 
 The ‘CNV tool mapping’ allows users to define input file formats, which will be used to map with the CNV results generated from any CNV detector tools. Hence, inCNV can understand the CNV result file from any tools.
-// File mapping dialog
+![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/file_mapping.png)
 
 - **Header column mapping:** mapping column of any result file. Users have to configure column name with the criteria: 'SAMPLE NAME', 'CHROMOSOME', 'START BASE PAIR', 'END BASE PAIR', and 'CNV TYPE'. For example, if a result file represents sample name with 'sample', we will set 'SAMPLE NAME' is with 'sample'. If a result file represents chromosome with 'chr', we will set 'CHROMOSOME' with 'chr'.
 - **Data field mapping:** mapping data of result file. Users have to configure data with the criteria: 'CHROMOSOME22', 'DUPLICATION', and 'DELETION'. For example, if a result file represents chromosome 22 with '22', we will set 'CHROMOSOME22' with '22'. If a result file represents duplication type of CNV with 'dup', we will set 'DUPLICATION' with 'dup'.
@@ -81,7 +81,8 @@ The ‘CNV tool mapping’ allows users to define input file formats, which will
 ### Sample set
 
 The ‘sample set’ allows users to define a group of samples they are interested in. At this component, users can indicate a set name, description and sample names of any sample set.
-// Sample set dialog
+
+![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/sample_set.png)
 
 - The sample names have to match with data in 'SAMPLE NAME' column of the given result file.
 
@@ -91,7 +92,7 @@ Users have to choose interesting criteria to analyze.
 
 - **For individaul sample analysis:** criteria namely a reference genome, a sample set, a sample name, many files, a CNV type and a chromosome.
   ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_analysis_config.png)
-  // image
+
 - **multiple sample analysis:** criteria namely a reference genome, a sample set, many sample names, one file, a CNV type and a chromosome.
   // image
 
