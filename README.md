@@ -43,7 +43,7 @@ docker-compose up -d
 
 Users can confiugre environments, by editing at file 'docker-compose.yml' attached to this project. Some part of file shown below;
 
-```javascript {.line-numbers}
+```
   incnv-backend:
     image: saowwapark/incnv-backend:latest
     container_name: incnv-backend
