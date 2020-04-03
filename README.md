@@ -1,8 +1,6 @@
 # inCNV
 
-inCNV is a web application being efficient to accept multiple CNV-tool results as input, integrate and prioritize captured CNVs with user-friendly interface. It can help users analyze the importance of captured CNVs by annotating CNVs with genetic data from Ensembl, Database of Genomic Variants (DGV), ClinVar and Online Mendelian Inheritance in Man (OMIM). Moreover, users can select interesting CNVs and export them as a plain text format to do further experimentally bio wet lab.
-
-The installed inCNV on the localhost will then automatically send a request to get the data sources provided at https://github.com/saowwapark/inCNV-datasource in order to configure the initial database and other data sources of the system.
+inCNV is a web-based application being efficient to accept multiple CNV-tool results as input, integrate and prioritize captured CNVs with user-friendly interface. It can help users analyze the importance of captured CNVs by annotating CNVs with genetic data from Ensembl, Database of Genomic Variants (DGV), ClinVar and Online Mendelian Inheritance in Man (OMIM). Moreover, users can select interesting CNVs and export them as a plain text format to do further experimentally bio wet lab.
 
 inCNV devide analyses into 2 categories: (1) Individual sample analysis, (2) Multiple sample analysis
 
@@ -19,7 +17,10 @@ inCNV was designed as a three-layer architecture with the (1) Frontend, (2) Back
 - Backend:
   We used Node.js with typescript and express framework for the backend development. Moreover, the backend was adopted with some extension for reading FASTA file with indexedfasta-js package (version 1.0.12) from JBrowse.26
 - Database:
-  We used MySql as our DBMS.
+  We used MySql as our DBMS. We have 3 schemas (or databases) namely, inCNV, bio_grch37, bio_grch38.
+  - 'inCNV schema' will stored user information and uploaded CNV result files.
+  - 'bio_grch37 schema' will store annotations for reference genome GRCh37.
+  - 'bio_grch38 schema' will store annotations for reference genome GRCh38.
 
 ## Installation
 
@@ -28,6 +29,15 @@ Use the [docker](https://docs.docker.com) to install inCNV.
 ```
 docker-compose up -d
 ```
+
+- Installation:
+  The installed inCNV on the localhost will then automatically send a request to get the data sources provided at https://github.com/saowwapark/inCNV-datasource in order to configure the initial database and other data sources of the system.
+- Updating annotations:  
+  inCNV will automatically update annotation databases provided at https://github.com/saowwapark/inCNV-datasource. inCNV will update only 'bio_grch37' and 'bio_grch38' schemas. For inCNV schema which stores uploaded CNV result files, inCNV will keep it the same.
+- Updating new version of inCNV:
+  the data stored in databases will be kept the same
+- Uninstallation:
+  Users have to remove dockers and mannaually remove databases.
 
 ## How to configure
 
