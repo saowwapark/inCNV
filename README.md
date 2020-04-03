@@ -66,12 +66,12 @@ Users can confiugre environments, by editing at file 'docker-compose.yml' attach
         condition: service_healthy
 ```
 
-From code above, inCNV on a docker image and with details:
+From code above, inCNV configuration has details;
 
 - Users can change every fields in environment setting except for 'NODE_ENV' and 'HOST'.
-- The code above is only partial. Therefore, after editing environment section, users have to edit other part related to the edited environment.
-- inCNV run at local host by nodeJS on development environment on port 3000. For this version we recommend to use 'development' environment.
-- Database host name is 'incnv-db' with port 3306. Login database with username 'root' and password 'rootpassword'. The database can be remotely accessed from other hosts via TCP
+- The code above is only partial. Therefore, after editing environment section, users have to edit other part of 'docker-componse.yml' related to the edited environment.
+- The database can be remotely accessed from outside the docker both within the same host and other hosts via TCP/IP. This feature is used to users can manually query data from a visual database design tool such as Workbech. Therefore, we recommend users to change 'DB_USER' and 'DB_PASSWORD'.
+- 'UPDATE_BIO_DATA_SCHEDULE' stores cron job data to be used for updating annotation databases. -- see information about [cron job](https://en.wikipedia.org/wiki/Cron).
 
 ## Work flow
 
@@ -135,10 +135,11 @@ use case
 - finding rare CNVs of samples from the same family or of the given sample set.
   - To do this, users can filter out the common CNVs and explore whether the remaining CNVs are rare and associated with the disease or not
 - finding a targeted sample is potential to have a specific disease. This can be done by
+
   1. combining CNV results of our target with the results and of a sample set which having the same disease.
   2. searching genes related to specific disease.
   3. searching our target
   4. searching the most common overlapping samples that include our target (our interesting sample).
   5. Then, if we can find enough the number of overlapping CNVs including our target’s CNVs, we may predict that the target is potential to have a disease and we need to perform biological wet lap to confirm again.
 
-// big image show all feature
+  ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/multiple_sample_analysis.png)
