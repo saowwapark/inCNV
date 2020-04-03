@@ -11,12 +11,12 @@ inCNV devide analyses into 2 categories: (1) Individual sample analysis, (2) Mul
 
 inCNV was designed as a three-layer architecture with the (1) Frontend, (2) Backend, and (3) Database.
 
-- Frontend:
+- **Frontend:**
   The frontend was developed by Angular framework (version 9.0.0).
   For UI, inCNV used Angular material UI component library (version 9.0.0) and d3.js library (version 5.14.2). The current version of inCNV supports Chrome, Opera, and Safari browsers.
-- Backend:
+- **Backend:**
   We used Node.js with typescript and express framework for the backend development. Moreover, the backend was adopted with some extension for reading FASTA file with indexedfasta-js package (version 1.0.12) from JBrowse.26
-- Database:
+- **Database:**
   We used MySql as our DBMS. We have 3 schemas (or databases) namely, inCNV, bio_grch37, bio_grch38.
   - 'inCNV schema' will stored user information and uploaded CNV result files.
   - 'bio_grch37 schema' will store annotations for reference genome GRCh37.
@@ -30,18 +30,20 @@ Use the [docker](https://docs.docker.com) to install inCNV.
 docker-compose up -d
 ```
 
-- Installation:
+- **Installation:**
   The installed inCNV on the localhost will then automatically send a request to get the data sources provided at https://github.com/saowwapark/inCNV-datasource in order to configure the initial database and other data sources of the system.
-- Updating annotations:  
+- **Updating annotations:**  
   inCNV will automatically update annotation databases provided at https://github.com/saowwapark/inCNV-datasource. inCNV will update only 'bio_grch37' and 'bio_grch38' schemas. For inCNV schema which stores uploaded CNV result files, inCNV will keep it the same.
-- Updating new version of inCNV:
-  the data stored in databases will be kept the same
-- Uninstallation:
-  Users have to remove dockers and mannaually remove databases.
+- **Updating new version of inCNV:**
+  the data stored in databases will be kept the same.
+- **Uninstallation:**
+  Users have to normally remove dockers and manually remove databases.
 
 ## How to configure
 
-```
+Users can confiugre environments, by editing at file 'docker-compose.yml' attached to this project. Some part of file shown below;
+
+```javascript {.line-numbers}
   incnv-backend:
     image: saowwapark/incnv-backend:latest
     container_name: incnv-backend
@@ -63,6 +65,13 @@ docker-compose up -d
       incnv-db:
         condition: service_healthy
 ```
+
+From code above, inCNV on a docker image and with details:
+
+- Users can change every fields in environment setting except for 'NODE_ENV' and 'HOST'.
+- The code above is only partial. Therefore, after editing environment section, users have to edit other part related to the edited environment.
+- inCNV run at local host by nodeJS on development environment on port 3000. For this version we recommend to use 'development' environment.
+- Database host name is 'incnv-db' with port 3306. Login database with username 'root' and password 'rootpassword'. The database can be remotely accessed from other hosts via TCP
 
 ## Work flow
 
