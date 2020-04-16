@@ -93,7 +93,7 @@ inCNV has data flow diagram (DFD) as below;
 
 ### Uploaded files
 
-Before using inCNV, users have to upload CNV results from any CNV detector tool that matches with the pre-defined [CNV tool mapping](#file-mapping) and pre-defined [sample set](#sample-set).
+Before using inCNV, users have to upload CNV results from any CNV detector tool that matches with the pre-defined [CNV tool mapping](#file-mapping) and pre-defined [sample set](#sample-set).\
 
 _Example: some part of CNV detection tool named CONTRA_
 
