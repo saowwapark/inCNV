@@ -76,7 +76,7 @@ From code above, inCNV configuration has details;
 ## Work flow
 
 inCNV has data flow diagram (DFD) as below;
-// DFD chart
+![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/overall_architecture.png)
 
 ## Input data preparation
 
