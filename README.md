@@ -73,6 +73,17 @@ From code above, inCNV configuration has details;
 - The database can be remotely accessed from outside the docker both within the same host and other hosts via TCP/IP. This feature is used to users can manually query data from a visual database design tool such as Workbech. Therefore, we recommend users to change 'DB_USER' and 'DB_PASSWORD'.
 - 'UPDATE_BIO_DATA_SCHEDULE' stores cron job data to be used for updating annotation databases. -- see information about [cron job](https://en.wikipedia.org/wiki/Cron).
 
+## Demo
+
+Users can download demo input files provided at [demo](https://github.com/saowwapark/inCNV/tree/master/demo-data).
+
+We modified the results files from _Zare, F. et al._ before uploading them into inCNV. We filtered out the data which not needing for inCNV analysis and reformat the remain data to match with a [pre-defined CNV tool template](### file mapping).
+
+The files were obtained from running multiple CNV detection tools against the exome of ten patients with breast cancer from the cancer genome atlas (TCGA)25 with BRCA project. The tools used for detecting CNVs were ADTEx, cn.MOPS, CONTRA, ExomeCNV31 and VarScan2. According to Zare, F. et al., Those tools have the thresholds of +/-0.2 to call CNVs.
+
+The result files from ADTEx, cn.MOPS and ExomeCNV represents CNV type with a standard CNV type number. The ‘1’, ‘2’, and ‘3’ represents the CNV deletion, no CNV (normal), and CNV duplication, respectively. The type number with more than ‘3’ represents the amplification. For our data sets, we used number ‘1’ as CNV deletion and number ‘3’ and more as CNV duplication.
+The result files from CONTRA and VarScan2 represent CNV type with log2 ratio. Therefore, for our data sets, we used log-ratio > +0.2 as the criteria for CNV duplication and log-ratio < - 0.2 for CNV deletion.
+
 ## Work flow
 
 inCNV has data flow diagram (DFD) as below;
