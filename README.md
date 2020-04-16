@@ -15,7 +15,7 @@ inCNV was designed as a three-layer architecture with the (1) Frontend, (2) Back
   The frontend was developed by Angular framework (version 9.0.0).
   For UI, inCNV used Angular material UI component library (version 9.0.0) and d3.js library (version 5.14.2). The current version of inCNV supports Chrome, Opera, and Safari browsers.
 - **Backend:**
-  We used Node.js with typescript and express framework for the backend development. Moreover, the backend was adopted with some extension for reading FASTA file with indexedfasta-js package (version 1.0.12) from JBrowse.26
+  We used Node.js with typescript and express framework for the backend development. Moreover, the backend was adopted with some extension for reading FASTA file with _indexedfasta-js_ package (version 1.0.12) from JBrowse[1].
 - **Database:**
   We used MySql as our DBMS. We have 3 schemas (or databases) namely, inCNV, bio_grch37, bio_grch38.
   - 'inCNV schema' will stored user information and uploaded CNV result files.
@@ -79,7 +79,7 @@ Users can download demo input files provided at [demo](https://github.com/saowwa
 
 We modified the results files from _Zare, F. et al._ before uploading them into inCNV. We filtered out the data which not needing for inCNV analysis and reformat the remain data to match with a [pre-defined CNV tool template](#file-mapping).
 
-The files were obtained from running multiple CNV detection tools against the exome of ten patients with breast cancer from the cancer genome atlas (TCGA)25 with BRCA project. The tools used for detecting CNVs were ADTEx, cn.MOPS, CONTRA, ExomeCNV31 and VarScan2. According to Zare, F. et al.[1], Those tools have the thresholds of +/-0.2 to call CNVs.
+The files were obtained from running multiple CNV detection tools against the exome of ten patients with breast cancer from the cancer genome atlas (TCGA)25 with BRCA project. The tools used for detecting CNVs were ADTEx, cn.MOPS, CONTRA, ExomeCNV31 and VarScan2. According to Zare, F. et al.[2], Those tools have the thresholds of +/-0.2 to call CNVs.
 
 The result files from ADTEx, cn.MOPS and ExomeCNV represents CNV type with a standard CNV type number. The ‘1’, ‘2’, and ‘3’ represents the CNV deletion, no CNV (normal), and CNV duplication, respectively. The type number with more than ‘3’ represents the amplification. For our data sets, we used number ‘1’ as CNV deletion and number ‘3’ and more as CNV duplication.
 The result files from CONTRA and VarScan2 represent CNV type with log2 ratio. Therefore, for our data sets, we used log-ratio > +0.2 as the criteria for CNV duplication and log-ratio < - 0.2 for CNV deletion.
@@ -188,4 +188,6 @@ Moreover, when users hover or click at any chart, they will pop-up dialog like t
 ## References
 
 <a id="1">[1]</a>
+Buels R, Yao E, Diesh CM, et al. JBrowse: a dynamic web platform for genome visualization and analysis. Genome Biol. 2016;17:66.
+<a id="2">[2]</a>
 Zare F, Dow M, Monteleone N, Hosny A, Nabavi S. An evaluation of copy number variation detection tools for cancer using whole exome sequencing data. Bmc Bioinformatics. 2017;18(1):286.
