@@ -120,8 +120,8 @@ The ‘CNV tool mapping’ allows users to define input file formats, which will
 ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/file_mapping.png)
 
 - **Header column mapping:** The header columns consist of 'SAMPLE NAME', 'CHROMOSOME', 'START BASE PAIR', 'END BASE PAIR', and 'CNV TYPE'. Users have to map column of any result file to them. For example, if a result file represents sample name with 'sample', we will set 'SAMPLE NAME' with 'sample'. If a result file represents chromosome with 'chr', we will set 'CHROMOSOME' with 'chr'.
-- **Data field mapping:** The data fields needed to be mapped consist of 'CHROMOSOME22', 'DUPLICATION', and 'DELETION'. Users have to map content of any result file to them. For example, if a result file represents chromosome 22 with '22', we will set 'CHROMOSOME22' with '22'. If a result file represents duplication type of CNV with 'dup', we will set 'DUPLICATION' with 'dup'.
-  _Note:_ For duplication CNV type, inCNV can understand only the words: 'dup', 'duplication' and 'gain'. For deletion CNV type, inCNV can understand only the words: 'del', 'deletion' and 'loss'.
+- **Data field mapping:** The data fields needed to be mapped consist of 'CHROMOSOME22', 'DUPLICATION', and 'DELETION'. Users have to map content of any result file to them. For example, if a result file represents chromosome 22 with '22', we will set 'CHROMOSOME22' with '22'. If a result file represents duplication type of CNV with 'dup', we will set 'DUPLICATION' with 'dup'.\
+  _Note: For duplication CNV type, inCNV can understand only the words: 'dup', 'duplication' and 'gain'. For deletion CNV type, inCNV can understand only the words: 'del', 'deletion' and 'loss'._
 
 ### Sample set
 
@@ -155,7 +155,7 @@ In this module, inCNV can help:
   _Example_
   ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_sample_analysis.png)
 
-Moreover, when users hover or click at any charts, they will show pop-up dialog data belows;
+Moreover, when users hover or click at any charts, they will show pop-up dialog data belows;\
 _CNV Tool dialog showing inputted-file CNV_
 ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_cnv_tool_dialog.png)
 
@@ -189,6 +189,6 @@ Moreover, when users hover or click at any chart, they will pop-up dialog like t
 ## References
 
 <a id="1">[1]</a>
-Zare F, Dow M, Monteleone N, Hosny A, Nabavi S. An evaluation of copy number variation detection tools for cancer using whole exome sequencing data. Bmc Bioinformatics. 2017;18(1):286.
+Zare F, Dow M, Monteleone N, Hosny A, Nabavi S. An evaluation of copy number variation detection tools for cancer using whole exome sequencing data. Bmc Bioinformatics. 2017;18(1):286.\
 <a id="2">[2]</a>
 Buels R, Yao E, Diesh CM, et al. JBrowse: a dynamic web platform for genome visualization and analysis. Genome Biol. 2016;17:66.
