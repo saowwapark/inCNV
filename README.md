@@ -110,7 +110,7 @@ The ‘sample set’ allows users to define a group of samples they are interest
 Users have to choose interesting criteria to analyze.
 
 - **For individaul sample analysis:** criteria namely a reference genome, a sample set, a sample name, many files, a CNV type and a chromosome.
-  ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_analysis_config.png)
+  ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_configure.png)
 
 - **multiple sample analysis:** criteria namely a reference genome, a sample set, many sample names, one file, a CNV type and a chromosome.
   // image
@@ -126,7 +126,7 @@ use case
 - finding CNVs not previously reported in case inCNV provides common overlapping CNVs but not match with DGV.
 - providing the CNV flanking region extraction which will extract the left and right flanking sequences of the CNV that can be used by biologists for primer design.
 
-// big image show all feature
+![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_sample_analysis.png)
 
 ### Multiple sample analysis
 
