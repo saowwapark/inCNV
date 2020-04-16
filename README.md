@@ -31,11 +31,11 @@ docker-compose up -d
 ```
 
 - **Installation:**
-  The installed inCNV on the localhost will then automatically send a request to get the data sources provided at https://github.com/saowwapark/inCNV-datasource in order to configure the initial database and other data sources of the system.
+  The installed inCNV on the localhost will automatically send a request to get the data sources provided at https://github.com/saowwapark/inCNV-datasource in order to generate initial databases and other data sources of the system.
 - **Updating annotations:**  
-  inCNV will automatically update annotation databases provided at https://github.com/saowwapark/inCNV-datasource. inCNV will update only 'bio_grch37' and 'bio_grch38' schemas. For inCNV schema which stores uploaded CNV result files, inCNV will keep it the same.
+  After [inCNV-datasource](https://github.com/saowwapark/inCNV-datasource) releases the new version, inCNV will automatically dowloand them and update annotation databases in the system. inCNV will update only 'bio_grch37' and 'bio_grch38' schemas. For inCNV schema which stores uploaded CNV result files, inCNV will keep it the same.
 - **Updating new version of inCNV:**
-  the data stored in databases will be kept the same.
+  The data stored in databases will remain the same. inCNV will update database only when new version of datasource is released.
 - **Uninstallation:**
   Users have to normally remove dockers and manually remove databases.
 
@@ -79,7 +79,7 @@ Users can download demo input files provided at [demo](https://github.com/saowwa
 
 We modified the results files from _Zare, F. et al._[1] before uploading them into inCNV. We filtered out the data which not needing for inCNV analysis and reformat the remain data to match with a [pre-defined CNV tool template](#file-mapping).
 
-The files were obtained from running multiple CNV detection tools against the exome of ten patients with breast cancer from the cancer genome atlas (TCGA)25 with BRCA project. The tools used for detecting CNVs were ADTEx, cn.MOPS, CONTRA, ExomeCNV31 and VarScan2. According to Zare, F. et al.[1], Those tools have the thresholds of +/-0.2 to call CNVs.
+The files were obtained from running multiple CNV detection tools against the exome of ten patients with breast cancer from the cancer genome atlas (TCGA)25 with BRCA project. The tools used for detecting CNVs were ADTEx, cn.MOPS, CONTRA, ExomeCNV31 and VarScan2. According to _Zare, F. et al._[1], Those tools have the thresholds of +/-0.2 to call CNVs.
 
 The result files from ADTEx, cn.MOPS and ExomeCNV represents CNV type with a standard CNV type number. The ‘1’, ‘2’, and ‘3’ represents the CNV deletion, no CNV (normal), and CNV duplication, respectively. The type number with more than ‘3’ represents the amplification. For our data sets, we used number ‘1’ as CNV deletion and number ‘3’ and more as CNV duplication.
 The result files from CONTRA and VarScan2 represent CNV type with log2 ratio. Therefore, for our data sets, we used log-ratio > +0.2 as the criteria for CNV duplication and log-ratio < - 0.2 for CNV deletion.
