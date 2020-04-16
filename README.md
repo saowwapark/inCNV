@@ -77,7 +77,7 @@ From code above, inCNV configuration has details;
 
 Users can download demo input files provided at [demo](https://github.com/saowwapark/inCNV/tree/master/demo-data).
 
-We modified the results files from _Zare, F. et al._ before uploading them into inCNV. We filtered out the data which not needing for inCNV analysis and reformat the remain data to match with a [pre-defined CNV tool template](###file mapping).
+We modified the results files from _Zare, F. et al._ before uploading them into inCNV. We filtered out the data which not needing for inCNV analysis and reformat the remain data to match with a [pre-defined CNV tool template](###-File-mapping).
 
 The files were obtained from running multiple CNV detection tools against the exome of ten patients with breast cancer from the cancer genome atlas (TCGA)25 with BRCA project. The tools used for detecting CNVs were ADTEx, cn.MOPS, CONTRA, ExomeCNV31 and VarScan2. According to Zare, F. et al., Those tools have the thresholds of +/-0.2 to call CNVs.
 
