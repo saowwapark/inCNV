@@ -1,8 +1,8 @@
 # inCNV
 
-inCNV is a web-based application being efficient to accept multiple CNV-tool results as input, integrate and prioritize captured CNVs with user-friendly interface. It can help users analyze the importance of captured CNVs by annotating CNVs with genetic data from Ensembl, Database of Genomic Variants (DGV), ClinVar and Online Mendelian Inheritance in Man (OMIM). Moreover, users can select interesting CNVs and export them as a plain text format to do further experimentally bio wet lab.
+inCNV is a web-based application accepting multiple CNV-tool results as input, integrate and prioritize captured CNVs with user-friendly interface. It can help users analyze the importance of captured CNVs by annotating CNVs with genetic data from Ensembl, Database of Genomic Variants (DGV), ClinVar and Online Mendelian Inheritance in Man (OMIM) including their flanking sequences. Moreover, users can select interesting CNVs and export them as a plain text format to do further experimentally bio wet lab.
 
-inCNV devide analyses into 2 categories: (1) Individual sample analysis, (2) Multiple sample analysis
+inCNV devide analyses into 2 modules: (1) Individual sample analysis, (2) Multiple sample analysis
 
 - Individual sample analysis: It focuses on finding the more precise CNVs by integrating the results of multiple CNV detector tools on one sample.
 - Multiple sample analysis: It focuses on finding the more precise CNVs by integrating the CNV results of multiple samples identified by a CNV tool.
@@ -77,9 +77,9 @@ From code above, inCNV configuration has details;
 
 Users can download demo input files provided at [demo](https://github.com/saowwapark/inCNV/tree/master/demo-data).
 
-We modified the results files from _Zare, F. et al._ before uploading them into inCNV. We filtered out the data which not needing for inCNV analysis and reformat the remain data to match with a [pre-defined CNV tool template]("### File mapping").
+We modified the results files from _Zare, F. et al._ before uploading them into inCNV. We filtered out the data which not needing for inCNV analysis and reformat the remain data to match with a [pre-defined CNV tool template](#file-mapping).
 
-The files were obtained from running multiple CNV detection tools against the exome of ten patients with breast cancer from the cancer genome atlas (TCGA)25 with BRCA project. The tools used for detecting CNVs were ADTEx, cn.MOPS, CONTRA, ExomeCNV31 and VarScan2. According to Zare, F. et al., Those tools have the thresholds of +/-0.2 to call CNVs.
+The files were obtained from running multiple CNV detection tools against the exome of ten patients with breast cancer from the cancer genome atlas (TCGA)25 with BRCA project. The tools used for detecting CNVs were ADTEx, cn.MOPS, CONTRA, ExomeCNV31 and VarScan2. According to Zare, F. et al.[1], Those tools have the thresholds of +/-0.2 to call CNVs.
 
 The result files from ADTEx, cn.MOPS and ExomeCNV represents CNV type with a standard CNV type number. The ‘1’, ‘2’, and ‘3’ represents the CNV deletion, no CNV (normal), and CNV duplication, respectively. The type number with more than ‘3’ represents the amplification. For our data sets, we used number ‘1’ as CNV deletion and number ‘3’ and more as CNV duplication.
 The result files from CONTRA and VarScan2 represent CNV type with log2 ratio. Therefore, for our data sets, we used log-ratio > +0.2 as the criteria for CNV duplication and log-ratio < - 0.2 for CNV deletion.
@@ -93,20 +93,34 @@ inCNV has data flow diagram (DFD) as below;
 
 ### Uploaded files
 
-Before using inCNV, users have to upload CNV results from any CNV detector tool that matches with the ‘CNV tool mapping’ and ‘sample set’ which need to be configured by the users before their upload.
-// input file example
+Before using inCNV, users have to upload CNV results from any CNV detector tool that matches with the pre-defined [CNV tool mapping](#file-mapping) and pre-defined [sample set](#sample-set).
+_Example: some part of CNV detection tool named CONTRA_
+
+```
+sample	chr	start	end	cnv_type
+TCGA-A7-A0CE	1	11868	14412	del
+TCGA-A7-A0CE	1	14362	29806	del
+TCGA-A7-A0CE	1	29553	33264	del
+TCGA-A7-A0CE	1	30266	31109	del
+TCGA-A7-A0CE	1	30365	30503	del
+TCGA-A7-A0CE	1	36276	50281	dup
+TCGA-A7-A0CE	1	69090	70008	del
+TCGA-A7-A0CE	1	129080	134836	del
+```
+
+_Upload component_
 ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/upload_file.png)
 
-- The format of input file has to be tab-delimitted format.
-- The file has to at least 5 columns represeting data: sample name, chromosome, start basepair, end basepair and cnv type.
+The CNV result files have to be plain text with tab-delimitted format. The contents need to have at least 5 columns which having the meanings of sample name, chromosome, start base pair, end base pair and CNV type.
 
 ### File mapping
 
-The ‘CNV tool mapping’ allows users to define input file formats, which will be used to map with the CNV results generated from any CNV detector tools. Hence, inCNV can understand the CNV result file from any tools.
+The ‘CNV tool mapping’ allows users to define input file formats, which will be used to map with the CNV results generated from any CNV detector tools. Users, however, need to reformat the result files to match with inCNV file template described below so that inCNV can understand the files.  
 ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/file_mapping.png)
 
-- **Header column mapping:** mapping column of any result file. Users have to configure column name with the criteria: 'SAMPLE NAME', 'CHROMOSOME', 'START BASE PAIR', 'END BASE PAIR', and 'CNV TYPE'. For example, if a result file represents sample name with 'sample', we will set 'SAMPLE NAME' is with 'sample'. If a result file represents chromosome with 'chr', we will set 'CHROMOSOME' with 'chr'.
-- **Data field mapping:** mapping data of result file. Users have to configure data with the criteria: 'CHROMOSOME22', 'DUPLICATION', and 'DELETION'. For example, if a result file represents chromosome 22 with '22', we will set 'CHROMOSOME22' with '22'. If a result file represents duplication type of CNV with 'dup', we will set 'DUPLICATION' with 'dup'.
+- **Header column mapping:** The header columns consist of 'SAMPLE NAME', 'CHROMOSOME', 'START BASE PAIR', 'END BASE PAIR', and 'CNV TYPE'. Users have to map column of any result file to them. For example, if a result file represents sample name with 'sample', we will set 'SAMPLE NAME' with 'sample'. If a result file represents chromosome with 'chr', we will set 'CHROMOSOME' with 'chr'.
+- **Data field mapping:** The data fields needed to be mapped consist of 'CHROMOSOME22', 'DUPLICATION', and 'DELETION'. Users have to map content of any result file to them. For example, if a result file represents chromosome 22 with '22', we will set 'CHROMOSOME22' with '22'. If a result file represents duplication type of CNV with 'dup', we will set 'DUPLICATION' with 'dup'.
+  _Note:_ For duplication CNV type, inCNV can understand only the words: 'dup', 'duplication' and 'gain'. For deletion CNV type, inCNV can understand only the words: 'del', 'deletion' and 'loss'.
 
 ### Sample set
 
@@ -120,31 +134,44 @@ The ‘sample set’ allows users to define a group of samples they are interest
 
 Users have to choose interesting criteria to analyze.
 
-- **For individaul sample analysis:** criteria namely a reference genome, a sample set, a sample name, many files, a CNV type and a chromosome.
+- **individaul sample analysis:** criteria namely a reference genome, a sample set, a sample name, many files, a CNV type and a chromosome.
   ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_configure.png)
 
 - **multiple sample analysis:** criteria namely a reference genome, a sample set, many sample names, one file, a CNV type and a chromosome.
-  // image
 
 ## Integreated CNV analyses
 
-inCNV devides analyses into 2 categories: (1) Individual sample analysis, (2) Multiple sample analysis
+inCNV devides analyses into 2 modules: (1) Individual sample analysis, (2) Multiple sample analysis
 use case
 
 ### Individual sample analysis
 
+In this module, inCNV can help:
+
 - finding the more precise CNVs by integrating the results of multiple CNV detector tools on one sample.
 - finding CNVs not previously reported in case inCNV provides common overlapping CNVs but not match with DGV.
 - providing the CNV flanking region extraction which will extract the left and right flanking sequences of the CNV that can be used by biologists for primer design.
+  _Example_
+  ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_sample_analysis.png)
 
-![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_sample_analysis.png)
+Moreover, when users hover or click at any charts, they will show pop-up dialog data belows;
+_CNV Tool dialog showing inputted-file CNV_
+![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_cnv_tool_dialog.png)
+
+_merged CNV dialog showing integrated CNV_
+![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_merged_dialog.png)
+
+_selected CNV dialog showing chosen CNV to export_
+![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_selected_dialog.png)
 
 ### Multiple sample analysis
 
+In this module, inCNV can help:
+
 - finding the more precise CNVs by integrating the CNV results of multiple samples identified by a CNV tool.
 - finding the relationship between the given group of samples having the same disease.
-- finding rare CNVs of samples from the same family or of the given sample set.
-  - To do this, users can filter out the common CNVs and explore whether the remaining CNVs are rare and associated with the disease or not
+- finding common CNVs within a group of samples having the same disease or de novo CNVs of a sample with in the same family or of the given sample set.
+  - To do this, users can filter out the common CNVs and explore whether the remaining CNVs are unique for a specific sample and/or associated with the disease
 - finding a targeted sample is potential to have a specific disease. This can be done by
 
   1. combining CNV results of our target with the results and of a sample set which having the same disease.
@@ -153,4 +180,12 @@ use case
   4. searching the most common overlapping samples that include our target (our interesting sample).
   5. Then, if we can find enough the number of overlapping CNVs including our target’s CNVs, we may predict that the target is potential to have a disease and we need to perform biological wet lap to confirm again.
 
-  ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/multiple_sample_analysis.png)
+_Example_
+![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/multiple_sample_analysis.png)
+
+Moreover, when users hover or click at any chart, they will pop-up dialog like the way in Individual sample analysis
+
+## References
+
+<a id="1">[1]</a>
+Zare F, Dow M, Monteleone N, Hosny A, Nabavi S. An evaluation of copy number variation detection tools for cancer using whole exome sequencing data. Bmc Bioinformatics. 2017;18(1):286.
