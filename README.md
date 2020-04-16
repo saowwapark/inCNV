@@ -151,7 +151,7 @@ In this module, inCNV can help:
 
 - finding the more precise CNVs by integrating the results of multiple CNV detector tools on one sample.
 - finding CNVs not previously reported in case inCNV provides common overlapping CNVs but not match with DGV.
-- providing the CNV flanking region extraction which will extract the left and right flanking sequences of the CNV that can be used by biologists for primer design.
+- providing the CNV flanking region extraction which will extract the left and right flanking sequences of the CNV that can be used by biologists for primer design.\
   _Example_
   ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_sample_analysis.png)
 
