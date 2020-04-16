@@ -17,7 +17,15 @@ inCNV was designed as a three-layer architecture with the (1) Frontend, (2) Back
 - **Backend:**
   We used Node.js with typescript and express framework for the backend development. Moreover, the backend was adopted with some extension for reading FASTA file with _indexedfasta-js_ package (version 1.0.12) from JBrowse[2].
 - **Database:**
+  inCNV acquired biological data from several sources in order to attach biological significance to the captured CNVs. These data were reformatted and linked together for CNV annotations. Therefore, we can apply them to align and visualize the given CNVs in the analysis result page. The public databases incorporated into inCNV included the UCSC26, DGV, ClinVar, Ensembl and HGNC.
+
+  - The human reference genomes were obtained from UCSC26 to find flanking regions of a given CNV.
+  - The DGV is used as the main reference of known CNVs.
+  - inCNV incorporated the clinical variants with OMIM annotation from ClinVar
+  - Gene-related information was obtained from Ensembl and HUGO Gene Nomenclature Committee at the European Bioinformatics Institute (HGNC).\
+
   We used MySql as our DBMS. We have 3 schemas (or databases) namely, inCNV, bio_grch37, bio_grch38.
+
   - 'inCNV schema' will stored user information and uploaded CNV result files.
   - 'bio_grch37 schema' will store annotations for reference genome GRCh37.
   - 'bio_grch38 schema' will store annotations for reference genome GRCh38.
