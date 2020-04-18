@@ -85,12 +85,12 @@ From code above, inCNV configuration has details;
 
 Users can download demo input files provided at [demo](https://github.com/saowwapark/inCNV/tree/master/demo-data).
 
-We modified the results files from _Zare, F. et al._[1] before uploading them into inCNV. We filtered out the data which not needing for inCNV analysis and reformat the remain data to match with a [pre-defined CNV tool template](#file-mapping).
+We modified the results files from _Zare, F. et al._[1] before uploading them into inCNV. We keep only necessary data for inCNV analysis and reformat the remain data to match with a [pre-defined CNV tool template](#file-mapping).
 
-The files were obtained from running multiple CNV detection tools against the exome of ten patients with breast cancer from the cancer genome atlas (TCGA)25 with BRCA project. The tools used for detecting CNVs were ADTEx, cn.MOPS, CONTRA, ExomeCNV31 and VarScan2. According to _Zare, F. et al._[1], Those tools have the thresholds of +/-0.2 to call CNVs.
+Those files were obtained from running multiple CNV detection tools against the exome of ten patients with breast cancer from the cancer genome atlas (TCGA) with BRCA project. The tools used for detecting CNVs were ADTEx, cn.MOPS, CONTRA, ExomeCNV31 and VarScan2. According to _Zare, F. et al._[1], Those tools have the thresholds of +/-0.2 to call CNVs.
 
-The result files from ADTEx, cn.MOPS and ExomeCNV represents CNV type with a standard CNV type number. The ‘1’, ‘2’, and ‘3’ represents the CNV deletion, no CNV (normal), and CNV duplication, respectively. The type number with more than ‘3’ represents the amplification. For our data sets, we used number ‘1’ as CNV deletion and number ‘3’ and more as CNV duplication.
-The result files from CONTRA and VarScan2 represent CNV type with log2 ratio. Therefore, for our data sets, we used log-ratio > +0.2 as the criteria for CNV duplication and log-ratio < - 0.2 for CNV deletion.
+The results files from _Zare, F. et al._[1] represented the CNV types of ADTEx, cn.MOPS and ExomeCNV with a standard CNV type number. ‘1’ = CNV deletion, ‘2’ = no CNV (normal), ‘3’ = CNV duplication, and more than ‘3’ = the amplification. For our demo data, we used number ‘1’ as CNV deletion and number ‘3’ and more as CNV duplication.
+On the contrary, the CNV types of CONTRA and VarScan2 were represented by log2 ratio. Therefore, for our demo data, we used log-ratio > +0.2 for CNV duplication and log-ratio < - 0.2 for CNV deletion.
 
 ## Work flow
 
@@ -120,14 +120,14 @@ TCGA-A7-A0CE	1	129080	134836	del
 _Upload component_
 ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/upload_file.png)
 
-The CNV result files have to be plain text with tab-delimitted format. The contents need to have at least 5 columns which having the meanings of sample name, chromosome, start base pair, end base pair and CNV type.
+The CNV result files have to be plain text with tab-delimitted format. The contents need to have at least 5 columns which having the meanings of sample name, chromosome, start position, end position and CNV type.
 
 ### File mapping
 
 The ‘CNV tool mapping’ allows users to define input file formats, which will be used to map with the CNV results generated from any CNV detector tools. Users, however, need to reformat the result files to match with inCNV file template described below so that inCNV can understand the files.  
 ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/file_mapping.png)
 
-- **Header column mapping:** The header columns consist of 'SAMPLE NAME', 'CHROMOSOME', 'START BASE PAIR', 'END BASE PAIR', and 'CNV TYPE'. Users have to map column of any result file to them. For example, if a result file represents sample name with 'sample', we will set 'SAMPLE NAME' with 'sample'. If a result file represents chromosome with 'chr', we will set 'CHROMOSOME' with 'chr'.
+- **Header column mapping:** The header columns consist of 'SAMPLE NAME', 'CHROMOSOME', 'START POSITION', 'END POSITION', and 'CNV TYPE'. Users have to map column of any result file to them. For example, if a result file represents sample name with 'sample', we will set 'SAMPLE NAME' with 'sample'. If a result file represents chromosome with 'chr', we will set 'CHROMOSOME' with 'chr'.
 - **Data field mapping:** The data fields needed to be mapped consist of 'CHROMOSOME22', 'DUPLICATION', and 'DELETION'. Users have to map content of any result file to them. For example, if a result file represents chromosome 22 with '22', we will set 'CHROMOSOME22' with '22'. If a result file represents duplication type of CNV with 'dup', we will set 'DUPLICATION' with 'dup'.\
   _Note: For duplication CNV type, inCNV can understand only the words: 'dup', 'duplication' and 'gain'. For deletion CNV type, inCNV can understand only the words: 'del', 'deletion' and 'loss'._
 
@@ -181,11 +181,10 @@ In this module, inCNV can help:
 - finding the relationship between the given group of samples having the same disease.
 - finding common CNVs within a group of samples having the same disease or de novo CNVs of a sample with in the same family or of the given sample set.
   - To do this, users can filter out the common CNVs and explore whether the remaining CNVs are unique for a specific sample and/or associated with the disease
-- finding a targeted sample is potential to have a specific disease. This can be done by
-
+- finding a targeted sample is potential to have a specific disease. This can be done by the following steps:
   1. combining CNV results of our target with the results and of a sample set which having the same disease.
   2. searching genes related to specific disease.
-  3. searching our target
+  3. searching our target.
   4. searching the most common overlapping samples that include our target (our interesting sample).
   5. Then, if we can find enough the number of overlapping CNVs including our target’s CNVs, we may predict that the target is potential to have a disease and we need to perform biological wet lap to confirm again.
 
