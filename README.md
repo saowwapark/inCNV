@@ -39,7 +39,7 @@ docker-compose up -d
 ```
 
 - **Installation:**
-  The installed inCNV on the localhost will automatically send a request to get the data sources provided at https://github.com/saowwapark/inCNV-datasource in order to generate initial databases and other data sources of the system.
+  The installed inCNV on the localhost will automatically send a request to get the data sources provided at https://github.com/saowwapark/inCNV-datasource in order to generate initial databases and other data sources of the system. After installing users can access inCNV with the default port 7000 via http://localhost:7000.
 - **Updating annotations:**  
   After [inCNV-datasource](https://github.com/saowwapark/inCNV-datasource) releases the new version, inCNV will automatically dowload it and update annotation databases in the system. inCNV will update only 'bio_grch37' and 'bio_grch38' schemas. For inCNV schema which stores uploaded CNV result files, inCNV will keep it the same.
 - **Updating new version of inCNV:**
