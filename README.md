@@ -64,7 +64,7 @@ Users can confiugre environments, by editing at file 'docker-compose.yml' attach
       - DB_PORT=3306
       - DB_USER=root
       - DB_PASSWORD=rootpassword
-      - UPDATE_BIO_DATA_SCHEDULE="0 0 * * *" // cron job
+      - UPDATE_BIO_DATA_SCHEDULE=0.0.*.*.* // cron job
     networks:
       - incnv-network
     volumes:
