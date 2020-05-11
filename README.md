@@ -52,7 +52,7 @@ Users have to normally remove dockers and manually remove databases.
 ```
 docker-compose down
 docker system prune -a
-docker volumne prune
+docker volume prune
 ```
 
 ## How to configure
