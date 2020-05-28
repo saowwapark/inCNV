@@ -26,6 +26,13 @@ services:
     depends_on:
       incnv-db:
         condition: service_healthy
+  rabbitmq:
+    image: 'rabbitmq:latest'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    networks:
+      - incnv-network
   incnv-db:
     image: sakkayaphab/incnv-db:latest
     container_name: incnv-db
