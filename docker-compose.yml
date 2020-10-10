@@ -1,55 +1,42 @@
 version: '2.4'
 services:
-  # incnv-frontend:
-  #   image: saowwapark/incnv-frontend:latest
-  #   container_name: incnv-frontend
-  #   restart: always
-  #   networks:
-  #     - incnv-network
-  # incnv-backend:
-  #   image: saowwapark/incnv-backend:latest
-  #   container_name: incnv-backend
-  #   restart: always
-  #   environment:
-  #     - NODE_ENV=development
-  #     - PORT=3000
-  #     - HOST=0.0.0.0
-  #     - DB_HOST=incnv-db
-  #     - DB_PORT=3306
-  #     - DB_USER=root
-  #     - DB_PASSWORD=rootpassword
-  #     - UPDATE_BIO_DATA_SCHEDULE=0.0.*.*.*
-  #   networks:
-  #     - incnv-network
-  #   volumes:
-  #     - incnv-backend-volume:/usr/src/app/src/datasource/
-  #   depends_on:
-  #     incnv-db:
-  #       condition: service_healthy
-  rabbitmq:
-    image: 'rabbitmq:management-alpine'
-    container_name: rabbitmq
-    ports:
-      - '5672:5672'
-      - '15672:15672'
-    environment:
-      - RABBITMQ_ERLANG_COOKIE=rabbitmqcookie
-      - RABBITMQ_DEFAULT_USER=rabbitmquser
-      - RABBITMQ_DEFAULT_PASS=rabbitmqpassword
-    volumes:
-      - rabbitmq-volume:/var/lib/rabbitmq
+  incnv-frontend:
+    image: saowwapark/incnv-frontend:latest
+    container_name: incnv-frontend
+    restart: always
     networks:
       - incnv-network
-  incnv-db:
-    image: sakkayaphab/incnv-db:latest
-    container_name: incnv-db
+  incnv-backend:
+    image: saowwapark/incnv-backend:latest
+    container_name: incnv-backend
+    restart: always
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - HOST=0.0.0.0
+      - DB_HOST=incnv-databases
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=rootpassword
+      - UPDATE_BIO_DATA_SCHEDULE="0 0 * * *"
+    networks:
+      - incnv-network
+    volumes:
+      - datasources-volume:/usr/src/app/volumes/datasources_volume
+      - analysis-results-volume:/usr/src/app/volumes/analysis_results_volume
+    depends_on:
+      incnv-databases:
+        condition: service_healthy
+  incnv-databases:
+    image: sakkayaphab/incnv-databases:latest
+    container_name: incnv-databases
     restart: always
     networks:
       - incnv-network
     environment:
       - MYSQL_ROOT_PASSWORD=rootpassword
     volumes:
-      - incnv-volume:/var/lib/mysql
+      - databases-volume:/var/lib/mysql
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u root --password=rootpassword
     ports:
@@ -58,22 +45,22 @@ services:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost","-u","root","--password=rootpassword"]
       timeout: 20s
       retries: 10
-  # incnv-reverse-proxy:
-  #   image: sakkayaphab/incnv-reverse-proxy:latest
-  #   container_name: incnv-reverse-proxy
-  #   restart: always
-  #   ports:
-  #     - 7000:80
-  #   networks:
-  #     - incnv-network
-  #   depends_on:
-  #     incnv-db:
-  #       condition: service_healthy
+  incnv-reverse-proxy:
+    image: sakkayaphab/incnv-reverse-proxy:latest
+    container_name: incnv-reverse-proxy
+    restart: always
+    ports:
+      - 7000:80
+    networks:
+      - incnv-network
+    depends_on:
+      incnv-databases:
+        condition: service_healthy
 
 volumes:
-  incnv-volume:
-  incnv-backend-volume:
-  rabbitmq-volume:
+  databases-volume:
+  datasources-volume:
+  analysis-results-volume:
 
 networks:
   incnv-network: {}
