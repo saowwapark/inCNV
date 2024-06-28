@@ -1,0 +1,13 @@
+<mat-toolbar mat-dialog-title>
+  <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+    <span class="title dialog-title">Error</span>
+    <button mat-icon-button matDialogClose aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div mat-dialog-content>{{ data.errorMessage }}</div>
+<div mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>Okay</button>
+</div>

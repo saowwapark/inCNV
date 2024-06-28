@@ -1,0 +1,14 @@
+<!-- group titile -->
+<div class="group-title" [ngClass]="item.classes">
+    <span class="hint-text">{{ item.title }}</span>
+</div>
+
+<!-- children -->
+<div class="group-items" fxLayout="column">
+    <ng-container *ngFor="let item of item.children">
+        <nav-group *ngIf="item.type=='group'" [item]="item"></nav-group>
+        <nav-collapsable *ngIf="item.type=='collapsable'"
+                                        [item]="item"></nav-collapsable>
+        <nav-item *ngIf="item.type=='item'" [item]="item"></nav-item>
+    </ng-container>
+</div>

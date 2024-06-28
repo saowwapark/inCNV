@@ -1,0 +1,20 @@
+@import '../../../../../styles/scss/abstracts/mixins';
+
+.mat-column-select {
+  @include table-column(10%);
+}
+.mat-column-fileName {
+  @include table-column(25%);
+}
+.mat-column-fileInfo {
+  @include table-column(15%);
+}
+.mat-column-cnvToolName {
+  @include table-column(15%);
+}
+.mat-column-tagDescriptions {
+  @include table-column(20%);
+}
+.mat-column-createdDate {
+  @include table-column(15%);
+}

@@ -1,0 +1,9 @@
+<app-filtered-select
+  [label]="'SAMPLE NAME'"
+  [appearance]="'outline'"
+  [style]="{ width: '250px' }"
+  [options]="samples"
+  [(ngModel)]="selectedSample"
+  (selectionChange)="selectedSampleChange.next(selectedSample)"
+>
+</app-filtered-select>

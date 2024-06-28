@@ -1,0 +1,150 @@
+<mat-toolbar mat-dialog-title class="mat-accent m-0">
+  <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+    <span class="title dialog-title">{{ dialogTitle }}</span>
+    <button mat-icon-button matDialogClose aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div mat-dialog-content>
+  <form [formGroup]="form" #f="ngForm">
+    <!--tabFileMappingName Column-->
+    <div class="row">
+      <div class="name-wrapper" style="padding-top:7px; padding-bottom: 10px">
+        <div fxLayout="column" fxLayoutAlign="center stretch">
+          <mat-form-field appearance="outline" class="width--full">
+            <mat-label>FILE MAPPING NAME</mat-label>
+            <input
+              fxFlex
+              formControlName="tabFileMappingName"
+              matInput
+              placeholder="CONTRA"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" fxLayout="row" fxLayoutAlign="space-between start">
+      <div class="header-wrapper">
+        <h3>Header Column Mapping</h3>
+        <div
+          class="headerColumnMapping block-wrapper"
+          formGroupName="headerColumnMapping"
+          fxLayout="column"
+          fxLayoutAlign="start start"
+        >
+          <mat-form-field appearance="outline" class="width--15">
+            <mat-label>SAMPLE NAME</mat-label>
+            <input
+              fxFlex
+              formControlName="sample"
+              matInput
+              placeholder="sample"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="width--15"
+            ><mat-label>CHROMOSOME</mat-label>
+            <input
+              fxFlex
+              formControlName="chromosome"
+              matInput
+              placeholder="chr"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="width--15">
+            <mat-label>START POSITION</mat-label>
+            <input
+              fxFlex
+              formControlName="startBp"
+              matInput
+              placeholder="start"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="width--15">
+            <mat-label>END POSITION</mat-label>
+            <input fxFlex formControlName="endBp" matInput placeholder="end" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="width--15">
+            <mat-label>CNV TYPE</mat-label>
+            <input
+              fxFlex
+              formControlName="cnvType"
+              matInput
+              placeholder="cnv_type"
+          /></mat-form-field>
+        </div>
+      </div>
+
+      <div class="data-wrapper">
+        <h3>Data Field Mapping</h3>
+        <div
+          class="dataFieldMapping block-wrapper"
+          formGroupName="dataFieldMapping"
+          fxLayout="column"
+          fxLayoutAlign="start start"
+        >
+          <mat-form-field appearance="outline" class="width--15">
+            <mat-label>CHROMOSOME22</mat-label>
+            <input
+              fxFlex
+              formControlName="chromosome22"
+              matInput
+              placeholder="22"
+            />
+          </mat-form-field>
+          <mat-form-field
+            appearance="outline"
+            class="width--15"
+            hintLabel="dup, duplication, gain"
+            ><mat-label>DUPLICATION</mat-label
+            ><input
+              fxFlex
+              formControlName="duplication"
+              matInput
+              placeholder="dup"
+            />
+          </mat-form-field>
+          <mat-form-field
+            appearance="outline"
+            class="width--15"
+            hintLabel="del, deletion, loss"
+          >
+            <mat-label>DELETION</mat-label>
+            <input
+              fxFlex
+              formControlName="deletion"
+              matInput
+              placeholder="del"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+  <button
+    *ngIf="action !== 'edit'"
+    mat-raised-button
+    color="primary"
+    (click)="matDialogRef.close(form)"
+    [disabled]="f.invalid"
+    aria-label="SAVE"
+  >
+    ADD
+  </button>
+
+  <button
+    *ngIf="action === 'edit'"
+    mat-raised-button
+    color="primary"
+    (click)="matDialogRef.close(['save', form])"
+    [disabled]="f.invalid"
+    aria-label="SAVE"
+  >
+    SAVE
+  </button>
+</div>

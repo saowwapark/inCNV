@@ -1,0 +1,43 @@
+table {
+  width: 100%;
+}
+
+@mixin table-column($size) {
+  white-space: unset !important;
+  width: $size !important;
+  overflow-wrap: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.mat-column-select {
+  @include table-column(5%);
+}
+.mat-column-no {
+  @include table-column(5%);
+}
+.mat-column-chromosome {
+  @include table-column(4%);
+}
+.mat-column-startBp {
+  @include table-column(9%);
+}
+.mat-column-endBp {
+  @include table-column(9%);
+}
+.mat-column-cnvType {
+  @include table-column(6%);
+}
+.mat-column-overlapLength {
+  @include table-column(9%);
+}
+// table will choose one between cnvTools and samples
+.mat-column-cnvTools {
+  @include table-column(27%);
+}
+.mat-column-samples {
+  @include table-column(27%);
+}

@@ -1,0 +1,12 @@
+<div class="nav" >
+  <ng-container *ngFor="let navigationItem of navigationData">
+
+    <nav-group *ngIf="navigationItem.type=='group'"
+                    [item]="navigationItem"></nav-group>
+    <nav-collapsable *ngIf="navigationItem.type=='collapsable'"
+                    [item]="navigationItem"></nav-collapsable>
+    <nav-item *ngIf="navigationItem.type=='item'"
+                    [item]="navigationItem"></nav-item>
+
+  </ng-container>
+</div>

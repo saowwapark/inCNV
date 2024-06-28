@@ -1,0 +1,45 @@
+table {
+  width: 100%;
+}
+
+@mixin table-column($size) {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  width: $size !important;
+  flex: 0 0 $size !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.mat-column-select {
+  @include table-column(5%);
+}
+.mat-column-samplesetName {
+  @include table-column(15%);
+}
+.mat-column-description {
+  @include table-column(40%);
+}
+.mat-column-createDate {
+  @include table-column(15%);
+}
+.mat-column-lastUpdated {
+  @include table-column(15%);
+}
+.mat-column-edit {
+  @include table-column(5%);
+}
+.mat-column-delete {
+  @include table-column(5%);
+}
+
+.description:first-letter {
+  text-transform: uppercase;
+}

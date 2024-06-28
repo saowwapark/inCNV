@@ -1,0 +1,28 @@
+<mat-toolbar mat-dialog-title>
+  <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+    <span class="title dialog-title">{{ dialogTitle }}</span>
+    <button mat-icon-button matDialogClose aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div mat-dialog-content>
+  <h3>Selected CNV</h3>
+  <div class="property-row" fxLayoutAlign="start" fxLayout="column wrap">
+    <div class="property-row" fxLayout="row wrap">
+      <div class="property property-name" fxFlex="1 1 30%">
+        Start Position
+      </div>
+      <div class="property property-value" fxFlex="1 1 70%">
+        {{ cnv.startBp | number }}
+      </div>
+    </div>
+    <div class="property-row" fxLayout="row wrap">
+      <div class="property property-name" fxFlex="1 1 30%">End Position</div>
+      <div class="property property-value" fxFlex="1 1 70%">
+        {{ cnv.endBp | number }}
+      </div>
+    </div>
+  </div>
+</div>

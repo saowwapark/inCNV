@@ -1,0 +1,36 @@
+@import '../theme';
+@import '../abstracts/variables';
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+// Global styles.
+html {
+  // This defines what 1rem is
+  font-size: 62.5%; //1 rem = 10px; 10px/16px = 62.5%
+  height: 100%;
+  width: 100%;
+}
+body {
+  display: flex;
+  height: 100%;
+  width: 100;
+}
+
+app-root {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex: 1 1 auto;
+}
+
+mat-sidenav-content.mat-drawer-content {
+  overflow-y: hidden !important;
+}
+

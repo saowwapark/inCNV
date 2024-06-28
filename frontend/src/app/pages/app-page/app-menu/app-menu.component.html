@@ -1,0 +1,27 @@
+<div
+  class="top-menu__container"
+  fxLayoutAlign="row"
+  fxLayoutAlign="space-between center"
+>
+  <div class="left">
+    <button mat-icon-button (click)="onToggleNavigation()">
+      <mat-icon style="color: white;">menu</mat-icon>
+    </button>
+  </div>
+  <div
+    class="right top-menu__buttons"
+    fxFlex
+    fxLayout="row"
+    fxLayoutAlign="end center"
+  >
+    <a mat-button style="color: white" routerLink="">
+      <img
+        src="../../assets/static/images/incnv-logo.svg"
+        alt="Logo"
+        class="top-menu__logo-img"
+      />inCNV
+    </a>
+
+    <a mat-button style="color: white" (click)="onLogout()">Sign out</a>
+  </div>
+</div>

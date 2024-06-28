@@ -1,0 +1,17 @@
+<!-- collapsable title -->
+<a class="nav-link" [ngClass]="item.classes" (click)="toggleOpen($event)">
+  <mat-icon class="nav-link-icon" *ngIf="item.icon">{{item.icon}}</mat-icon>
+  <span class="nav-link-title">{{item.title}}</span>
+  <mat-icon class="collapsable-arrow">keyboard_arrow_right</mat-icon>
+</a>
+
+<!-- children -->
+<div class="children" [@slideInOut]="isOpen">
+    <ng-container *ngFor="let item of item.children">
+        <nav-item *ngIf="item.type=='item'" [item]="item"></nav-item>
+        <nav-collapsable *ngIf="item.type=='collapsable'"
+                                        [item]="item"></nav-collapsable>
+        <nav-group *ngIf="item.type=='group'" [item]="item"></nav-group>
+    </ng-container>
+</div>
+

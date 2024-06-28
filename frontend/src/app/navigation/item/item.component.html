@@ -1,0 +1,9 @@
+<!-- item.url -->
+<a class="nav-link" [ngClass]="item.classes"
+    [routerLink]="[item.url]" [routerLinkActive]="['active', 'accent']"
+    [routerLinkActiveOptions]="{exact: item.exactMatch || false}"
+    [target]="item.openInNewTab ? '_blank' : '_self'">
+    <mat-icon class="nav-link-icon" *ngIf="item.icon">{{item.icon}}</mat-icon>
+    <span class="nav-link-title">{{item.title}}</span>
+</a>
+

@@ -1,0 +1,35 @@
+<div [formGroup]="filterSelectGroup">
+  <mat-form-field [appearance]="appearance" [class]="class" [ngStyle]="style">
+    <mat-label>{{ label }}</mat-label>
+    <mat-select
+      [(value)]="selectedOption"
+      formControlName="selectControl"
+      (selectionChange)="selectionChange.next(selectedOption)"
+      [required]="required"
+    >
+      <mat-optgroup *ngIf="filteredOptions">
+        <input matInput type="text" placeholder="Filter..." #input />
+        <mat-option *ngFor="let option of filteredOptions" [value]="option">
+          <ng-container
+            *ngIf="
+              option.name;
+              then showOptionWithName;
+              else showOptionWithOption
+            "
+          ></ng-container>
+          <ng-template #showOptionWithName>
+            {{ option.name }}
+          </ng-template>
+
+          <ng-template #showOptionWithOption>
+            {{ option }}
+          </ng-template>
+        </mat-option>
+      </mat-optgroup>
+    </mat-select>
+    <mat-error
+      *ngIf="filterSelectGroup.get('selectControl').hasError('required')"
+      >required</mat-error
+    >
+  </mat-form-field>
+</div>

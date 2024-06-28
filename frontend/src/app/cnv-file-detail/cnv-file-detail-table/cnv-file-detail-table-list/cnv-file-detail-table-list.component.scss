@@ -1,0 +1,86 @@
+:host {
+  width: 100%;
+}
+.reformat-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.reformat-item {
+  height: 100%;
+  width: 100%;
+}
+
+.table-container {
+  position: relative;
+  // max-height: 800px;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// .header-right .mat-sort-header-container {
+//   display: flex !important;
+//   justify-content: flex-end !important;
+//   text-align: right;
+//   padding-right: 40px;
+// }
+
+// .data-right {
+//   text-align: right;
+//   padding-right: 58px !important;
+// }
+
+@mixin table-column($size) {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  width: $size !important;
+  flex: 0 0 $size !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.mat-column-select {
+  @include table-column(10%);
+}
+.mat-column-no {
+  @include table-column(10%);
+}
+.mat-column-sample {
+  @include table-column(15%);
+}
+.mat-column-chromosome {
+  @include table-column(15%);
+}
+.mat-column-startBp {
+  @include table-column(20%);
+}
+.mat-column-endBp {
+  @include table-column(20%);
+}
+.mat-column-cnvType {
+  @include table-column(10%);
+}

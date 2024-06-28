@@ -1,0 +1,74 @@
+<div *ngIf="!selectedChrRegion">
+  <div class="warning__container--not-show-data mat-elevation-z8">
+    <div class="warning__item--not-show-data">
+      Selected region of interest.
+    </div>
+  </div>
+</div>
+<div [style.height]="!selectedChrRegion ? '0px' : 'auto'">
+  <div fxLayout="column">
+    <div *ngIf="selectedChrRegion" fxLayout="row" fxLayoutAlign="center center">
+      <!-- selected chromosome -->
+      <div fxLayout="row" fxLayoutAlign=" center">
+        <div class="property">Chromosome {{ chromosome }}:</div>
+        <div fxLayout="row" fxLayoutGap="15px">
+          <div>
+            <mat-form-field appearance="legacy" style="width: 170px">
+              <mat-label>START POSITION</mat-label
+              ><input
+                #startBpInput
+                matInput
+                [textMask]="{ mask: numberMark }"
+                [value]="selectedChrRegion.startBp | number"
+              />
+            </mat-form-field>
+          </div>
+          <div class="property" style="align-self: center">to</div>
+          <div>
+            <mat-form-field appearance="legacy" style="width: 170px">
+              <mat-label>END POSITION</mat-label
+              ><input
+                #endBpInput
+                matInput
+                [textMask]="{ mask: numberMark }"
+                [value]="selectedChrRegion.endBp | number"
+              />
+            </mat-form-field>
+          </div>
+
+          <button
+            mat-mini-fab
+            color="accent"
+            style="align-self: center"
+            (click)="updateSelectedBp(startBpInput.value, endBpInput.value)"
+          >
+            Go
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div #dgvChartDiv onResize class="one-chart"></div>
+  <div #comparedChartDiv onResize class="multiple-chart"></div>
+  <div #mergedChartDiv onResize class="one-chart"></div>
+</div>
+
+<!-- selected cnv -->
+<div>
+  <div *ngIf="selectedChrRegion && this.finalResultData.cnvInfos.length === 0">
+    <div class="warning__container--not-show-data mat-elevation-z8">
+      <div class="warning__item--not-show-data">
+        Please click on 'merged CNVs chart' or 'merged CNVs table' to select
+        CNVs.
+      </div>
+    </div>
+  </div>
+  <div
+    [ngClass]="{
+      'no-height':
+        selectedChrRegion && this.finalResultData.cnvInfos.length === 0
+    }"
+  >
+    <div #finalResultChartDiv onResize class="one-chart"></div>
+  </div>
+</div>

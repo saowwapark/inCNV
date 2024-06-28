@@ -1,0 +1,66 @@
+<mat-toolbar mat-dialog-title>
+  <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+    <span class="title dialog-title">{{ dialogTitle }}</span>
+    <button mat-icon-button matDialogClose aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div mat-dialog-content>
+  <form
+    [formGroup]="form"
+    fxLayout="column"
+    fxLayoutAlign="start start"
+    fxLayoutGap="10px"
+  >
+    <!--Sampleset Name Column-->
+    <mat-form-field appearance="outline" class="form-field-width">
+      <mat-label>SET NAME</mat-label>
+      <input fxFlex formControlName="samplesetName" matInput />
+    </mat-form-field>
+    <!--Description Column-->
+    <mat-form-field appearance="outline" class="form-field-width">
+      <mat-label>DESCRIPTION</mat-label>
+      <input fxFlex formControlName="description" matInput />
+    </mat-form-field>
+    <!--Samples Column-->
+    <mat-form-field appearance="outline" class="form-field-width">
+      <mat-label>SAMPLE NAMES</mat-label>
+      <mat-chip-list #sampleList>
+        <mat-chip
+          color="accent"
+          selected
+          *ngFor="let sample of form.get('samples').value; let i = index"
+          selectable="false"
+          [removable]="true"
+          (removed)="onRemoveSample(i)"
+        >
+          {{ sample }}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input
+          [matChipInputFor]="sampleList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          matChipInputAddOnBlur="true"
+          (matChipInputTokenEnd)="onAddSample($event)"
+        />
+      </mat-chip-list>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSave()"
+    [disabled]="
+      form.get('samplesetName').value.length === 0 ||
+      form.get('description').value.length === 0 ||
+      form.get('samples').value.length === 0
+    "
+    aria-label="SAVE"
+  >
+    {{ buttonName }}
+  </button>
+</div>

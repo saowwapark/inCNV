@@ -1,0 +1,51 @@
+<div>
+  <!-- HEADER -->
+  <app-header [title]="'Upload CNV Result'"></app-header>
+
+  <!-- CONTENT -->
+  <div>
+    <mat-horizontal-stepper #stepper linear="false">
+      <mat-step label="Upload CNV Tool Result">
+        <app-upload-form
+          fxLayout="column"
+          fxLayoutAlign="space-between center"
+          (confirmClicked)="goToReformatStep($event)"
+        ></app-upload-form>
+      </mat-step>
+      <mat-step label="Edited/Reformatted File">
+        <app-preview-reformat-cnv-tool-result
+          *ngIf="uploadCnvToolResultId"
+          [uploadCnvToolResultId]="uploadCnvToolResultId"
+          (previousStep)="goToUploadStep()"
+          (nextStep)="goToSuccessStep()"
+        ></app-preview-reformat-cnv-tool-result>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+          <div>
+            You are now done.
+          </div>
+
+          <div>
+            <button
+              mat-button
+              mat-raised-button
+              color="primary"
+              (click)="uploadAgain()"
+            >
+              Upload again
+            </button>
+            <button
+              mat-button
+              [routerLink]="['/app/myfiles']"
+              routerLinkActive="active"
+            >
+              Go to My Files
+            </button>
+          </div>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </div>
+</div>

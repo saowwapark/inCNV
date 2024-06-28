@@ -1,0 +1,34 @@
+<!-- HEADER -->
+<app-header [title]="'Reformatted File'">
+  <!-- SEARCH -->
+  <app-search></app-search>
+</app-header>
+
+<!-- SELECTED BAR -->
+<selected-bar
+  *ngIf="selectedResults.length > 0"
+  [selectedData]="selectedResults"
+  [selectedBarType]="2"
+  (submitEmitter)="onSubmitAllSelected($event)"
+  (deselectAllEmitter)="onDelselectedAll()"
+  [@slideInTop]
+>
+</selected-bar>
+
+<!-- CONTENT -->
+<div class="layout__content-items">
+  <cnv-file-detail-table-list
+    [uploadCnvToolResultId]="uploadCnvToolResultId"
+  ></cnv-file-detail-table-list>
+</div>
+
+<!-- ADD BUTTON -->
+<button
+  mat-fab
+  color="accent"
+  class="add-button"
+  aria-label="add data"
+  (click)="onAddData()"
+>
+  <mat-icon>add</mat-icon>
+</button>

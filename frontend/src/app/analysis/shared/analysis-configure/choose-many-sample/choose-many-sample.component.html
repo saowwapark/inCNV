@@ -1,0 +1,41 @@
+<div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="20px">
+  <div class="property-warn">
+    Please choose at least 2 sample names.
+  </div>
+  <div>
+    <mat-checkbox
+      [(ngModel)]="isCheckedSelectAll"
+      (change)="toggleSelectAll($event.checked)"
+      >Select all</mat-checkbox
+    >
+  </div>
+  <form [formGroup]="parentForm">
+    <div fxLayout="row wrap" fxLayoutAlign=" start" fxLayoutGap="60px">
+      <div
+        formArrayName="sampleFormArray"
+        *ngFor="let sampleForm of sampleFormArray.controls; let i = index"
+      >
+        <div [formGroupName]="i" fxLayout="row" fxLayoutAlign=" start">
+          <app-filtered-select
+            [style]="{ width: '250px' }"
+            [label]="'SAMPLE'"
+            [appearance]="'outline'"
+            [required]="true"
+            formControlName="sample"
+            placeholder="SAMPLE"
+            [options]="samples"
+            (selectionChange)="onSubmit()"
+          >
+          </app-filtered-select>
+
+          <button mat-icon-button color="warn" (click)="removeSample(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" (click)="addNewSample(i)">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

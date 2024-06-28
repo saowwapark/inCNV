@@ -1,0 +1,155 @@
+<ng-container *ngIf="!dataSource; else elseTemplate">
+  <div class="warning__container--not-show-data mat-elevation-z8">
+    <div class="warning__item--not-show-data">
+      Please select CNV results.
+    </div>
+  </div>
+</ng-container>
+<ng-template #elseTemplate>
+  <div class="example-table-container">
+    <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort>
+      <!-- No. Column -->
+      <ng-container matColumnDef="no">
+        <th mat-header-cell *matHeaderCellDef>No.</th>
+        <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
+      </ng-container>
+
+      <!-- Chromosome Column -->
+      <ng-container matColumnDef="chromosome">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Chromosome
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.chromosome }}
+        </td>
+      </ng-container>
+
+      <!-- Start Basepair Column -->
+      <ng-container matColumnDef="startBp">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="header-right"
+        >
+          Start Position
+        </th>
+        <td mat-cell class="data-right" *matCellDef="let row">
+          {{ row.startBp | number }}
+        </td>
+      </ng-container>
+
+      <!-- End Basepair Column -->
+      <ng-container matColumnDef="endBp">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="header-right"
+        >
+          End Position
+        </th>
+        <td mat-cell class="data-right" *matCellDef="let row">
+          {{ row.endBp | number }}
+        </td>
+      </ng-container>
+
+      <!-- CNV Type Column -->
+      <ng-container matColumnDef="cnvType">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>CNV Type</th>
+        <td mat-cell *matCellDef="let row">{{ row.cnvType }}</td>
+      </ng-container>
+
+      <!-- CNV Type Column -->
+      <ng-container matColumnDef="overlaps">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>CNV Tools</th>
+        <!-- <td mat-cell *matCellDef="let row">{{ row.overlaps.join() }}</td> -->
+        <td mat-cell *matCellDef="let row">Test Edit later</td>
+      </ng-container>
+
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef>Delete</th>
+        <td mat-cell *matCellDef="let i = index">
+          <button mat-icon-button (click)="deleteRow(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- expandedEnsembl column (colspan = all columns) -->
+      <ng-container matColumnDef="expandedEnsembls">
+        <td
+          mat-cell
+          *matCellDef="let row"
+          [attr.colspan]="displayedColumns.length"
+        >
+          <div
+            class="expand-row-wrapper"
+            fxLayout="column"
+            [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'"
+          >
+            <div class="expand-row">
+              <div class="expand-detail--header">
+                Ensembl:
+              </div>
+              <mat-chip-list>
+                <mat-chip
+                  *ngFor="let ensembl of row.ensembls"
+                  color="accent"
+                  selected
+                >
+                  {{ ensembl }}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- expandedDGV column (colspan = all columns) -->
+      <ng-container matColumnDef="expandedDgvs">
+        <td
+          mat-cell
+          *matCellDef="let row"
+          [attr.colspan]="displayedColumns.length"
+        >
+          <div
+            class="expand-row-wrapper"
+            fxLayout="column"
+            [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'"
+          >
+            <div class="expand-row">
+              <div class="expand-detail--header">
+                DGV:
+              </div>
+              <mat-chip-list>
+                <mat-chip *ngFor="let dgv of row.dgvs" color="accent" selected>
+                  {{ dgv }}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr
+        mat-row
+        *matRowDef="let element; columns: displayedColumns"
+        class="default-row"
+        [class.expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element"
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: ['expandedEnsembls']"
+        class="expand-row"
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: ['expandedDgvs']"
+        class="expand-row"
+      ></tr>
+    </table>
+  </div>
+</ng-template>

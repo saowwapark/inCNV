@@ -1,0 +1,48 @@
+<div
+  fxFlex
+  fxLayout="row"
+  fxLayoutAlign="start center"
+  [ngClass]="{
+    delete: selectedBarType === SelectedBarType.DELETE,
+    use: selectedBarType === SelectedBarType.USE
+  }"
+>
+  <div class="close-button-wrapper" fxFlex="0 1 auto" (click)="deselectAll()">
+    <button mat-button fxLayout="row" fxLayoutAlign="start center">
+      <mat-icon>arrow_back</mat-icon>
+      <span class="text-uppercase">Back</span>
+    </button>
+  </div>
+
+  <div fxFlex fxLayout="row" fxLayoutAlign="end center">
+    <div>
+      <span class="selected-contacts-count">
+        <span>{{ selectedData.length }}</span>
+        <span> selected</span>
+      </span>
+    </div>
+    <div *ngIf="selectedBarType === SelectedBarType.DELETE">
+      <div class="multi-select-actions">
+        <button
+          mat-icon-button
+          (click)="submitAllSelected()"
+          aria-label="delete selected"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="selectedBarType === SelectedBarType.USE">
+      <div class="multi-select-actions">
+        <button
+          mat-icon-button
+          (click)="submitAllSelected()"
+          aria-label="submit selected"
+        >
+          <mat-icon>navigate_next</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

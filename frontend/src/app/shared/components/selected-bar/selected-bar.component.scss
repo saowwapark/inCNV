@@ -1,0 +1,21 @@
+@use '@angular/material' as mat;
+@import './../../../../styles/scss/theme';
+@import './../../../../styles/scss/abstracts/variables';
+:host {
+  background-color: $color-primary;
+  color: mat.get-color-from-palette($background, text);
+  position: absolute;
+  top: $top-menu-height;
+  right: 0;
+  left: 0;
+  height: $header-container-height;
+  @include mat.elevation(3);
+}
+
+.delete {
+  background-color: mat.get-color-from-palette($warn);
+}
+
+.use {
+  background-color: mat.get-color-from-palette($accent);
+}

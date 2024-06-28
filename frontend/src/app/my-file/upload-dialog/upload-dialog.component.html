@@ -1,0 +1,130 @@
+<mat-toolbar mat-dialog-title>
+  <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+    <span class="title dialog-title">{{ dialogTitle }}</span>
+    <button mat-icon-button matDialogClose aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div mat-dialog-content>
+  <form
+    [formGroup]="form"
+    fxLayout="column"
+    fxLayoutAlign="start start"
+    fxLayoutGap="10px"
+  >
+    <!--Reference Genome Column-->
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <mat-label>Reference Genome: </mat-label>
+      <mat-radio-group formControlName="referenceGenome">
+        <mat-radio-button value="grch37">GRCh37/hg19</mat-radio-button>
+        <mat-radio-button value="grch38" style="padding-left: 20px;"
+          >GRCh38/hg38</mat-radio-button
+        >
+      </mat-radio-group>
+    </div>
+    <!--File Name Column-->
+    <mat-form-field appearance="outline" class="form-field-width">
+      <mat-label>FILE NAME</mat-label>
+      <input
+        fxFlex
+        formControlName="fileName"
+        matInput
+        placeholder="File Name"
+        required
+      />
+      <mat-error *ngIf="form.get('fileName').hasError('required')"
+        >required</mat-error
+      >
+    </mat-form-field>
+    <!--File Info Column-->
+    <mat-form-field appearance="outline" class="form-field-width">
+      <mat-label>FILE INFO</mat-label>
+      <input
+        fxFlex
+        formControlName="fileInfo"
+        matInput
+        placeholder="File Info"
+      />
+    </mat-form-field>
+
+    <!--CNV Tool Name Column-->
+    <mat-form-field appearance="outline" class="form-field-width">
+      <mat-label>CNV TOOL</mat-label>
+      <input
+        fxFlex
+        formControlName="cnvToolName"
+        required
+        matInput
+        placeholder="CNV Tool"
+      />
+      <mat-error *ngIf="form.get('cnvToolName').hasError('required')"
+        >required</mat-error
+      >
+    </mat-form-field>
+    <!--Tab File Mapping Column-->
+
+    <app-filtered-select
+      [label]="'FILE MAPPING'"
+      [appearance]="'outline'"
+      [class]="'form-field-width'"
+      [required]="true"
+      formControlName="tabFileMapping"
+      [options]="tabFileMappings"
+      [selectedOption]="initialTabFileMapping"
+    >
+    </app-filtered-select>
+
+    <!--Sampleset Column-->
+
+    <app-filtered-select
+      [label]="'SAMPLESET'"
+      [appearance]="'outline'"
+      [class]="'form-field-width'"
+      [required]="true"
+      formControlName="sampleset"
+      [options]="samplesets"
+      [selectedOption]="initialSampleset"
+    >
+    </app-filtered-select>
+
+    <!--Tag Descriptions Column-->
+    <mat-form-field appearance="outline" class="form-field-width">
+      <mat-label>TAG DESCRIPTIONS</mat-label>
+      <mat-chip-list #tagDescriptionList>
+        <mat-chip
+          color="accent"
+          selected
+          *ngFor="
+            let sample of form.get('tagDescriptions').value;
+            let i = index
+          "
+          selectable="false"
+          [removable]="true"
+          (removed)="onRemoveTag(i)"
+        >
+          {{ sample }}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input
+          [matChipInputFor]="tagDescriptionList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          matChipInputAddOnBlur="true"
+          (matChipInputTokenEnd)="onAddTag($event)"
+        />
+      </mat-chip-list>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="form.invalid"
+    (click)="onSave()"
+    aria-label="SAVE"
+  >
+    SAVE
+  </button>
+</div>

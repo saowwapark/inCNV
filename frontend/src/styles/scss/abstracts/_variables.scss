@@ -1,0 +1,29 @@
+@use '@angular/material' as mat;
+@import './../theme';
+
+$color-text-dark: yellow;
+
+//COLORS
+$color-primary: mat.get-color-from-palette($primary); // #1976d2
+$color-primary-light: mat.get-color-from-palette($primary, lighter); //#2196f3
+$color-primary-dark: mat.get-color-from-palette($primary, darker); //#0d47a1
+
+$color-warn: mat.get-color-from-palette($warn);
+$color-warn-light: mat.get-color-from-palette($warn, lighter);
+$color-warn-dark: mat.get-color-from-palette($warn, darker);
+
+$color-blue-1: #039be5; //light-blue-600
+
+$color-gray-light-1: #f7f7f7;
+$color-gray-dark: #777;
+$color-black: #000;
+
+//GRID
+$grid-width: 114rem;
+$gutter-vertical: 8rem;
+$gutter-horizontal: 2rem;
+
+// SIZES
+$top-menu-height: 4rem;
+$header-container-height: 6rem;
+$icon-size: 24px;
