@@ -1,0 +1,79 @@
+version: '2.4'
+services:
+  incnv-frontend:
+    image: incnv-frontend:2.2.0
+    container_name: incnv-frontend
+    restart: always
+    networks:
+      - incnv-network
+    ports:
+      - ${FRONTEND_PORT}
+    environment:
+      - FRONTEND_PORT=${FRONTEND_PORT}
+    command: /bin/sh -c "envsubst '$${FRONTEND_PORT}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+  
+  incnv-backend:
+    image: incnv-backend:2.1.0
+    container_name: incnv-backend
+    restart: always
+    environment:
+      - NODE_ENV=prod
+      - PORT=${API_PORT}
+      - HOST=0.0.0.0
+      - DB_HOST=${DATABASE_HOST}
+      - DB_PORT=${DATABASE_PORT}
+      - DB_USER=${DATABASE_USER_NAME}
+      - DB_PASSWORD=${DATABASE_PASSWORD}
+      - UPDATE_BIO_DATA_SCHEDULE="0 0 * * *"
+    ports:
+      - ${API_PORT}
+    networks:
+      - incnv-network
+    volumes:
+      - datasources-volume:/usr/src/app/volumes/datasources_volume
+      - analysis-results-volume:/usr/src/app/volumes/analysis_results_volume
+    depends_on:
+      incnv-databases:
+        condition: service_healthy
+  incnv-databases:
+    image: mysql:8
+    container_name: incnv-databases
+    restart: always
+    networks:
+      - incnv-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+    volumes:
+      - databases-volume:/var/lib/mysql
+    ports:
+      - 7004:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost","-u","root","--password=${DATABASE_PASSWORD}"]
+      timeout: 20s
+      retries: 10
+  incnv-reverse-proxy:
+    image: nginx:latest
+    container_name: incnv-reverse-proxy
+    restart: always
+    networks:
+      - incnv-network
+    depends_on:
+      incnv-databases:
+        condition: service_healthy
+    ports:
+      - ${NGINX_EXTERNAL_PORT}:${NGINX_PORT}
+    volumes:
+      - ./reverse-proxy-nginx.conf.template:/etc/nginx/reverse-proxy-nginx.conf.template
+    environment:
+      - NGINX_PORT=${NGINX_PORT}
+      - FRONTEND_PORT=${FRONTEND_PORT}
+      - API_PORT=${API_PORT}
+    command: /bin/sh -c "envsubst '$${NGINX_PORT} $${FRONTEND_PORT} $${API_PORT}' < /etc/nginx/reverse-proxy-nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+
+volumes:
+  databases-volume:
+  datasources-volume:
+  analysis-results-volume:
+
+networks:
+  incnv-network: {}
