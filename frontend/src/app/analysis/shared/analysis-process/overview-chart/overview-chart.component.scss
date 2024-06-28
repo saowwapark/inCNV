@@ -1,0 +1,11 @@
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: 0.125;
+  shape-rendering: crispEdges;
+}
+
+.zoom {
+  cursor: move;
+  fill: none;
+  pointer-events: all;
+}

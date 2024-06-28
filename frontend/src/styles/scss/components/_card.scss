@@ -1,0 +1,25 @@
+@use '@angular/material' as mat;
+.mat-card {
+  padding: 0 !important;
+
+  .mat-card-header {
+    background-color: mat.get-color-from-palette($primary, lighter);
+    color: white !important;
+    height: 5rem;
+
+    .mat-card-title {
+      margin-top: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+  }
+  .mat-card-content {
+    padding: 24px !important;
+    background-color: white !important;
+  }
+
+  .mat-card-actions {
+    margin: 0px !important;
+    padding: 24px !important;
+    background-color: white !important;
+  }
+}

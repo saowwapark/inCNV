@@ -1,0 +1,43 @@
+:host {
+  width: 80%;
+}
+.card-wrapper {
+  padding: 2rem;
+}
+
+.header-file {
+  width: 100%;
+  .header-file__title {
+    background-color: #bdcac4;
+  }
+  .header-file__field {
+    background-color: #69f0af85;
+    font-weight: bold;
+    font-size: 1.1rem;
+    white-space: nowrap;
+  }
+  .header-file__value {
+    background-color: #b9f6ca66;
+    white-space: nowrap;
+    font-size: 1.2 rem;
+  }
+}
+
+.data-file {
+  width: calc((100% / 5) * 3);
+  .data-file__field {
+    background-color: #69f0af85;
+    font-weight: bold;
+    font-size: 1.1rem;
+    white-space: nowrap;
+  }
+  .data-file__value {
+    background-color: #b9f6ca66;
+    white-space: nowrap;
+    font-size: 1.2rem;
+  }
+}
+
+:host {
+  padding: 2rem;
+}

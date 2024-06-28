@@ -1,0 +1,35 @@
+<div id="sampleset">
+  <!-- HEADER -->
+  <app-header [title]="'Sample Set'">
+    <!-- SEARCH -->
+    <app-search></app-search>
+  </app-header>
+
+  <!-- / HEADER -->
+
+  <!-- SELECTED BAR -->
+  <selected-bar
+    *ngIf="selectedSamplesets.length > 0"
+    [selectedData]="selectedSamplesets"
+    [selectedBarType]="2"
+    (submitEmitter)="onSubmitAllSelected($event)"
+    (deselectAllEmitter)="onDelselectedAll()"
+    [@slideInTop]
+  ></selected-bar>
+
+  <!-- CONTENT -->
+  <div class="layout__content-items">
+    <app-sampleset-list [samplesets]="samplesets"></app-sampleset-list>
+  </div>
+
+  <!-- ADD SAMPLESET BUTTON -->
+  <button
+    mat-fab
+    class="add-button"
+    color="accent"
+    aria-label="add sampleset"
+    (click)="onAddSampleset()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

@@ -1,0 +1,17 @@
+mat-form-field {
+  width: 27rem;
+}
+
+.card-content-wrapper {
+  background-color: white;
+  width: 40rem;
+  height: 23rem;
+  padding: 2rem;
+}
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

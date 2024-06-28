@@ -1,0 +1,65 @@
+<mat-card>
+  <mat-card-content>
+    <div
+      class="card-content-wrapper"
+      fxlayout="row"
+      fxLayoutAlign="center center"
+    >
+      <form
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxLayoutGap="30px"
+        #f="ngForm"
+        (ngSubmit)="onLogin(f)"
+      >
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <mat-form-field appearance="standard">
+            <input
+              matInput
+              placeholder="Your Email"
+              [ngModel]=""
+              name="email"
+              required
+              email
+              #emailInput="ngModel"
+            />
+            <mat-error *ngIf="emailInput.hasError('required')">
+              Field must not be empty.
+            </mat-error>
+            <mat-error *ngIf="!emailInput.hasError('required')">
+              E-Mail is invalid.
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field
+            hintLabel="Should be at least 6 characters long."
+            appearance="standard"
+          >
+            <input
+              type="password"
+              matInput
+              placeholder="Your password"
+              [ngModel]=""
+              name="password"
+              required
+              minlength="6"
+              #pwInput="ngModel"
+            />
+            <mat-hint align="end">{{ pwInput.value?.length }} / 6</mat-hint>
+            <mat-error>Has to be at least 6 characters long.</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            mat-raised-button
+            color="primary"
+            [disabled]="f.invalid"
+          >
+            Sign in
+          </button>
+        </div>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>

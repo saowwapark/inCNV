@@ -1,0 +1,21 @@
+@use '@angular/material' as mat;
+.top-menu__container {
+  width: 100%;
+  padding: 0.8rem 1.6rem;
+  height: $top-menu-height;
+  background-color: $color-primary;
+  @include mat.elevation(4);
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.top-menu__logo-img {
+  height: 30px;
+}

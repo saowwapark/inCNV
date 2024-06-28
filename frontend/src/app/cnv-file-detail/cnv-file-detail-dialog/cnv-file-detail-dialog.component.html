@@ -1,0 +1,57 @@
+<mat-toolbar mat-dialog-title>
+  <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+    <span class="title dialog-title">{{ dialogTitle }}</span>
+    <button mat-icon-button matDialogClose aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div mat-dialog-content>
+  <form [formGroup]="form" fxLayout="column" fxLayoutAlign="start start">
+    <!-- Chromosome Column-->
+    <mat-form-field>
+      <input fxFlex formControlName="sample" matInput placeholder="Sample" />
+    </mat-form-field>
+
+    <!-- Chromosome Column-->
+    <mat-form-field>
+      <input
+        fxFlex
+        formControlName="chromosome"
+        matInput
+        placeholder="Chromosome"
+      />
+    </mat-form-field>
+
+    <!-- Cnv Type Column-->
+    <mat-form-field>
+      <input fxFlex formControlName="cnvType" matInput placeholder="CNV Type" />
+    </mat-form-field>
+
+    <!-- Start Position Column-->
+    <mat-form-field>
+      <input
+        fxFlex
+        formControlName="startBp"
+        matInput
+        placeholder="Start Position"
+      />
+    </mat-form-field>
+
+    <!-- End Position Column-->
+    <mat-form-field>
+      <input
+        fxFlex
+        formControlName="endBp"
+        matInput
+        placeholder="End Position"
+      />
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+  <button mat-button (click)="onSave()" aria-label="SAVE">
+    SAVE
+  </button>
+</div>

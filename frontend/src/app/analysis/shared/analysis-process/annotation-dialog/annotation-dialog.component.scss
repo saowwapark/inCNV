@@ -1,0 +1,25 @@
+table {
+  width: 100%;
+}
+
+@mixin table-column($size) {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  width: $size !important;
+  flex: 0 0 $size !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+.mat-column-variantSubtype {
+  @include table-column(25%);
+}
+.mat-column-varriantAccession {
+  @include table-column(75%);
+}

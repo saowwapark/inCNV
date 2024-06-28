@@ -1,0 +1,25 @@
+<div>
+  <!-- HEADER -->
+  <app-header [title]="'File Mapping'">
+    <!-- SEARCH -->
+    <app-search></app-search>
+  </app-header>
+
+  <!-- CONTENT -->
+  <div class="layout__content-items">
+    <!-- TAB FILE MAPPING -->
+    <app-tab-file-mapping-list></app-tab-file-mapping-list>
+  </div>
+
+  <!-- ADD TabFileMapping Tool BUTTON -->
+  <button
+    mat-fab
+    class="accent"
+    id="add-tab-file-mapping-button"
+    aria-label="add tabFileMapping"
+    (click)="onAddTabFileMapping()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+
+</div>

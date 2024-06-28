@@ -1,0 +1,14 @@
+<mat-toolbar mat-dialog-title>
+  <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+    <span class="title dialog-title">Confirm</span>
+    <button mat-icon-button matDialogClose aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div mat-dialog-content>{{ confirmMessage }}</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="dialogRef.close(true)">Confirm</button>
+  <button mat-button (click)="dialogRef.close(false)">Cancel</button>
+</div>

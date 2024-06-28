@@ -1,0 +1,264 @@
+<!-- HEADER -->
+<app-header [title]="'Individual Sample Analysis'"> </app-header>
+
+<!-- CONTENT -->
+<div class="layout__content-items">
+  <mat-vertical-stepper #stepper linear="false">
+    <mat-step label="Choose Reference Genome">
+      <div fxLayout="column" fxLayoutGap="20px" class="step__content-item">
+        <mat-radio-group
+          [(ngModel)]="chosenReferenceGenome"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxLayoutGap="30px"
+        >
+          <mat-radio-button value="grch37">GRCh37/hg19</mat-radio-button>
+          <mat-radio-button value="grch38">GRCh38/hg38</mat-radio-button>
+        </mat-radio-group>
+
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <button mat-button color="primary" matStepperPrevious>
+            BACK
+          </button>
+          <button matStepperNext mat-raised-button color="primary">
+            NEXT
+          </button>
+        </div>
+      </div>
+    </mat-step>
+    <mat-step label="Choose Sample Set">
+      <div fxLayout="column" fxLayoutGap="20px" class="step__content-item">
+        <app-choose-sampleset
+          [selectedSampleset]="chosenSampleset"
+          (selectedSamplesetChange)="setSampleset($event)"
+        >
+        </app-choose-sampleset>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <button mat-button color="primary" matStepperPrevious>
+          BACK
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="validateChosenSampleset()"
+        >
+          NEXT
+        </button>
+      </div>
+    </mat-step>
+    <mat-step label="Choose Sample Name">
+      <div fxLayout="column" fxLayoutGap="20px" class="step__content-item">
+        <app-choose-one-sample
+          [samples]="chosenSampleset.samples"
+          [selectedSample]="chosenSample"
+          (selectedSampleChange)="setSample($event)"
+        ></app-choose-one-sample>
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <button mat-button color="primary" matStepperPrevious>
+            BACK
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="validateChosenSample()"
+          >
+            NEXT
+          </button>
+        </div>
+      </div>
+    </mat-step>
+    <mat-step label="Choose Uploaded CNV Results">
+      <div fxLayout="column" fxLayoutGap="20px" class="step__content-item">
+        <app-choose-many-file
+          class="step__content-item"
+          [samplesetId]="chosenSampleset.samplesetId"
+          [referenceGenome]="chosenReferenceGenome"
+          [sample]="chosenSample"
+          [selectedFiles]="chosenFiles"
+          (selectedFilesChange)="setSelectedFiles($event)"
+        >
+        </app-choose-many-file>
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <button mat-button color="primary" matStepperPrevious>
+            BACK
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="validateChosenFiles()"
+          >
+            NEXT
+          </button>
+        </div>
+      </div>
+    </mat-step>
+    <mat-step label="Choose CNV Type">
+      <div fxLayout="column" fxLayoutGap="20px" class="step__content-item">
+        <mat-radio-group
+          [(ngModel)]="chosenCnvType"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxLayoutGap="30px"
+        >
+          <mat-radio-button value="duplication" checked
+            >Duplication</mat-radio-button
+          >
+          <mat-radio-button value="deletion">Deletion</mat-radio-button>
+        </mat-radio-group>
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <button mat-button color="primary" matStepperPrevious>
+            BACK
+          </button>
+          <button mat-raised-button color="primary" matStepperNext>
+            NEXT
+          </button>
+        </div>
+      </div>
+    </mat-step>
+    <mat-step label="Choose Chromosome">
+      <div
+        fxLayout="column"
+        fxLayoutAlign="start start"
+        fxLayoutGap="20px"
+        class="step__content-item"
+      >
+        <app-filtered-select
+          [label]="'CHROMOSOME'"
+          [appearance]="'outline'"
+          [style]="{ width: '250px' }"
+          [options]="chrs"
+          [(ngModel)]="chosenChr"
+        >
+        </app-filtered-select>
+
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <button mat-button color="primary" matStepperPrevious>
+            BACK
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="validateChosenChromosome()"
+          >
+            NEXT
+          </button>
+        </div>
+      </div>
+    </mat-step>
+
+    <mat-step label="Done">
+      <div fxLayout="column" fxLayoutGap="20px" class="step__content-item">
+        <h2>Summary</h2>
+        <div>
+          <!-- Reference Genome -->
+          <div class="property-row" fxLayout="row wrap">
+            <div class="property property-name" fxFlex="1 1 30%">
+              Reference Genome
+            </div>
+            <div class="property property-value" fxFlex="1 1 70%">
+              {{ chosenReferenceGenome | grch }}
+            </div>
+          </div>
+
+          <!-- Sampleset -->
+          <div class="property-row" fxLayout="row wrap">
+            <div class="property property-name" fxFlex="1 1 30%">
+              Sample Set
+            </div>
+            <div class="property property-value" fxFlex="1 1 70%">
+              {{ chosenSampleset.samplesetName }}
+            </div>
+          </div>
+
+          <!-- Sample -->
+          <div class="property-row" fxLayout="row wrap">
+            <div class="property property-name" fxFlex="1 1 30%">
+              Sample
+            </div>
+            <div class="property property-value" fxFlex="1 1 70%">
+              {{ chosenSample }}
+            </div>
+          </div>
+
+          <!-- Choose File -->
+          <div class="property-row" fxLayout="row wrap">
+            <div class="property property-name" fxFlex="1 1 30%">
+              Uploaded CNV Results
+            </div>
+            <div
+              class="property property-value"
+              fxFlex="1 1 70%"
+              fxLayout="column"
+            >
+              <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                class="grid-color-header"
+              >
+                <div fxFlex="0 1 35%" class="grid-padding-header">
+                  File Name
+                </div>
+                <div fxFlex="0 1 40%" class="grid-padding-header">
+                  File Info.
+                </div>
+                <div fxFlex="0 1 25%" class="grid-padding-header">
+                  CNV Tool
+                </div>
+              </div>
+              <div
+                *ngFor="let chosenFile of chosenFiles"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                class="grid-color-data"
+              >
+                <div fxFlex="0 1 35%" class="grid-padding-data">
+                  {{ chosenFile.fileName }}
+                </div>
+                <div fxFlex="0 1 40%" class="grid-padding-data">
+                  {{ chosenFile.fileInfo }}
+                </div>
+                <div fxFlex="0 1 25%" class="grid-padding-data">
+                  {{ chosenFile.cnvToolName }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chromosome -->
+          <div class="property-row" fxLayout="row wrap">
+            <div class="property property-name" fxFlex="1 1 30%">
+              Chromosome
+            </div>
+            <div class="property property-value" fxFlex="1 1 70%">
+              {{ chosenChr | uppercase }}
+            </div>
+          </div>
+
+          <!-- CNV Type -->
+          <div class="property-row" fxLayout="row wrap">
+            <div class="property property-name" fxFlex="1 1 30%">
+              CNV Type
+            </div>
+            <div class="property property-value" fxFlex="1 1 70%">
+              {{ chosenCnvType | titlecase }}
+            </div>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <button mat-button color="primary" matStepperPrevious>
+            BACK
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            [routerLink]="['/app/analysis/individual-sample/analysis-process']"
+            (click)="confirmConfig()"
+          >
+            NEXT
+          </button>
+        </div>
+      </div>
+    </mat-step>
+  </mat-vertical-stepper>
+</div>

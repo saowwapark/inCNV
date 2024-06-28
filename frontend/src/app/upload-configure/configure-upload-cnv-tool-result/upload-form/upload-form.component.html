@@ -1,0 +1,127 @@
+<div class="spinner-container" *ngIf="isUploading | async">
+  <mat-spinner></mat-spinner>
+</div>
+<mat-card class="mat-elevation-z4">
+  <mat-card-header>
+    <mat-card-title>Upload File</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form
+      [formGroup]="form"
+      fxLayout="column"
+      fxLayoutAlign="space-around stretch"
+      fxLayoutGap="10px"
+    >
+      <!--reference genome-->
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <mat-label>REFERENCE GENOME: </mat-label>
+        <mat-radio-group formControlName="referenceGenome">
+          <mat-radio-button value="grch37">GRCh37/hg19</mat-radio-button>
+
+          <mat-radio-button value="grch38" style="padding-left: 20px;"
+            >GRCh38/hg38</mat-radio-button
+          >
+        </mat-radio-group>
+      </div>
+
+      <!--upload file Column-->
+      <div>
+        <mat-form-field appearance="outline" class="form-field-width">
+          <mat-label>UPLOAD FILE</mat-label>
+          <input formControlName="fileName" matInput required readonly="true" />
+
+          <mat-icon matSuffix color="accent" (click)="filePicker.click()"
+            >cloud_upload</mat-icon
+          >
+          <mat-error *ngIf="form.get('fileName').hasError('required')"
+            >required</mat-error
+          >
+        </mat-form-field>
+
+        <input type="file" #filePicker (change)="onFilePicked($event)" />
+      </div>
+
+      <!--fileInfo-->
+      <div>
+        <mat-form-field appearance="outline" class="form-field-width">
+          <mat-label>FILE INFO</mat-label>
+          <input fxFlex formControlName="fileInfo" matInput />
+        </mat-form-field>
+      </div>
+      <!--cnvToolName Column-->
+      <mat-form-field appearance="outline" class="form-field-width">
+        <mat-label>CNV TOOL NAME</mat-label>
+        <input fxFlex formControlName="cnvToolName" matInput required />
+        <mat-error *ngIf="form.get('cnvToolName').hasError('required')"
+          >required</mat-error
+        >
+      </mat-form-field>
+      <!--tabFileMapping Id Column-->
+      <div>
+        <app-filtered-select
+          formControlName="tabFileMapping"
+          [label]="'FILE MAPPING'"
+          [options]="tabFileMappings"
+          [required]="true"
+          [class]="'form-field-width'"
+          [appearance]="'outline'"
+        >
+        </app-filtered-select>
+      </div>
+
+      <!--sampleset Column-->
+      <div>
+        <app-filtered-select
+          formControlName="sampleset"
+          [label]="'SAMPLE SET'"
+          [options]="samplesets"
+          [required]="true"
+          [class]="'form-field-width'"
+          [appearance]="'outline'"
+        >
+        </app-filtered-select>
+      </div>
+
+      <!--Tag Descriptions Column-->
+      <div>
+        <mat-form-field appearance="outline" class="form-field-width">
+          <mat-label>TAG DESCRIPTIONS</mat-label>
+          <mat-chip-list #tagDescriptionList>
+            <mat-chip
+              color="accent"
+              selected
+              *ngFor="let tag of tagDescriptions"
+              selectable="false"
+              [removable]="true"
+              (removed)="onRemoveTag(tag)"
+            >
+              {{ tag }}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+
+            <input
+              formControlName="tagDescriptions"
+              [matChipInputFor]="tagDescriptionList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              matChipInputAddOnBlur="true"
+              (matChipInputTokenEnd)="onAddTag($event)"
+            />
+          </mat-chip-list>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-card-content>
+  <mat-card-actions fxLayout="row" fxLayoutAlign="end center">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onConfirm()"
+      [disabled]="form.invalid"
+    >
+      CONFIRM
+    </button>
+    <button mat-button color="warn" (click)="onReset()">
+      RESET
+    </button>
+  </mat-card-actions>
+</mat-card>

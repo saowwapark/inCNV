@@ -1,0 +1,82 @@
+<!--
+<div class="example-loading-shade"  *ngIf="isLoadingResults" >
+  <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+</div> -->
+<!-- CONTENT -->
+
+<div fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="start stretch">
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <mat-form-field fxFlex="1 1 100%" appearance="outline">
+      <mat-label>Search...</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (keyup)="applyFilter($event.target.value)" />
+    </mat-form-field>
+  </div>
+  <div class="table-container mat-elevation-z2">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <!-- Radio Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let upload" class="select">
+          <mat-radio-group>
+            <mat-radio-button
+              [checked]="
+                selectedFile.uploadCnvToolResultId ===
+                upload.uploadCnvToolResultId
+              "
+              [value]="upload"
+              (change)="selectFile($event.value)"
+            >
+            </mat-radio-button>
+          </mat-radio-group>
+        </td>
+      </ng-container>
+
+      <!-- File Name Column -->
+      <ng-container matColumnDef="fileName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>File Name</th>
+        <td mat-cell *matCellDef="let upload">{{ upload.fileName }}</td>
+      </ng-container>
+
+      <!-- File Information Column -->
+      <ng-container matColumnDef="fileInfo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>File Info.</th>
+        <td mat-cell *matCellDef="let upload">{{ upload.fileInfo }}</td>
+      </ng-container>
+
+      <!-- cnvToolName Column -->
+      <ng-container matColumnDef="cnvToolName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>CNV Tool</th>
+        <td mat-cell *matCellDef="let upload">{{ upload.cnvToolName }}</td>
+      </ng-container>
+
+      <!-- Tags Column -->
+      <ng-container matColumnDef="tagDescriptions">
+        <th mat-header-cell *matHeaderCellDef>Tag Description</th>
+        <td mat-cell *matCellDef="let upload">
+          <mat-chip-list>
+            <mat-chip *ngFor="let tag of upload.tagDescriptions">
+              {{ tag }}
+            </mat-chip>
+          </mat-chip-list>
+        </td>
+      </ng-container>
+      <!-- Date Column -->
+      <ng-container matColumnDef="createdDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created Date</th>
+        <td mat-cell *matCellDef="let upload">
+          {{ upload.createDate | date }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator
+      [length]="dataSource.data.length"
+      [pageSizeOptions]="[10, 25, 50, 100]"
+      class="paginator-sticky"
+    ></mat-paginator>
+  </div>
+</div>

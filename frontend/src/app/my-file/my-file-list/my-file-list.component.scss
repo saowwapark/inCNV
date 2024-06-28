@@ -1,0 +1,60 @@
+table {
+  width: 100%;
+}
+
+.active {
+  color: green;
+}
+@mixin table-column($size) {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  width: $size !important;
+  flex: 0 0 $size !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.mat-column-select {
+  @include table-column(5%);
+}
+.mat-column-no {
+  @include table-column(5%);
+}
+.mat-column-fileName {
+  @include table-column(18%);
+}
+.mat-column-fileInfo {
+  @include table-column(7%);
+}
+.mat-column-referenceGenome {
+  @include table-column(5%);
+}
+.mat-column-cnvToolName {
+  @include table-column(10%);
+}
+
+.mat-column-tabFileMappingName {
+  @include table-column(10%);
+}
+.mat-column-samplesetName {
+  @include table-column(10%);
+}
+.mat-column-tagDescriptions {
+  @include table-column(15%);
+}
+.mat-column-createDate {
+  @include table-column(10%);
+}
+.mat-column-edit {
+  @include table-column(5%);
+}
+.mat-column-detail {
+  @include table-column(5%);
+}

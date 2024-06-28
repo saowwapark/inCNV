@@ -1,0 +1,22 @@
+<!-- HEADER -->
+<app-header [title]="'My Files'">
+
+  <!-- SEARCH -->
+  <app-search></app-search>
+</app-header>
+
+<!-- SELECTED BAR -->
+<selected-bar
+  *ngIf="selectedUploads.length > 0"
+  [selectedData]="selectedUploads"
+  [selectedBarType]="2"
+  (submitEmitter)="onSubmitAllSelected($event)"
+  (deselectAllEmitter)="onDelselectedAll()"
+  [@slideInTop]
+>
+</selected-bar>
+
+<!-- CONTENT -->
+<div class="layout__content-items">
+  <my-file-list></my-file-list>
+</div>

@@ -1,0 +1,30 @@
+@use '@angular/material' as mat;
+@import '../../../../styles/scss/abstracts/variables';
+
+.messages-container {
+  width: 100%;
+  padding: 0.8rem 1.6rem;
+  background-color: $color-warn-light;
+  color: $color-warn-dark;
+  border: 1 solid $color-warn-dark;
+  @include mat.elevation(6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.message {
+}

@@ -1,0 +1,33 @@
+table {
+  width: 100%;
+}
+
+@mixin table-column($size) {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  width: $size !important;
+  flex: 0 0 $size !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.mat-column-select {
+  @include table-column(10%);
+}
+.mat-column-samplesetName {
+  @include table-column(30%);
+}
+.mat-column-description {
+  @include table-column(60%);
+}
+
+.description:first-letter {
+  text-transform: uppercase;
+}

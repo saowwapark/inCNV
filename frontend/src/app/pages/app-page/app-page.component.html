@@ -1,0 +1,21 @@
+<mat-sidenav-container fullscreen>
+
+  <!-- NAVIGATION -->
+  <mat-sidenav #sidenav role="navigation">
+    <app-navigation></app-navigation>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <!-- MENU -->
+    <app-menu (menuToggled)="sidenav.toggle()"></app-menu>
+    <!-- CONTENT -->
+    <main class="layout--100vh">
+      <!-- Spinner Loading-->
+      <app-nav-loading></app-nav-loading>
+      <!-- Message -->
+      <app-messages></app-messages>
+      <router-outlet> </router-outlet>
+    </main>
+  </mat-sidenav-content>
+  
+</mat-sidenav-container>
