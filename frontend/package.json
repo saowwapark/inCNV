@@ -1,6 +1,5 @@
 {
   "name": "incnv-frontend",
-  "version": "2.3.0",
   "scripts": {
     "ng": "ng",
     "dev": "ng serve --port=4000",
