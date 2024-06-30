@@ -4,7 +4,7 @@
     "ng": "ng",
     "dev": "ng serve --port=4000",
     "prod": "ng serve --configuration=production",
-    "build-prod": "ng build --configuration=production --verbose",
+    "build": "ng build --configuration=production --verbose",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
