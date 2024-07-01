@@ -98,18 +98,16 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Build and push frontend Docker image
-        run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t saowwapark/incnv-frontend:v${{ needs.check-version.outputs.current_version }} -t saowwapark/incnv-frontend:latest ./frontend --push
-
-      - name: Push Docker images to Docker Hub
+      - name: Login to Docker Hub
         run: |
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-          docker push saowwapark/incnv-frontend:v${{ needs.check-version.outputs.current_version }}
-          docker push saowwapark/incnv-frontend:latest
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push incnv-frontend Docker image
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64 -t saowwapark/incnv-frontend:v${{ needs.check-version.outputs.current_version }} -t saowwapark/incnv-frontend:latest ./frontend --push
 
   create-backend-image:
     runs-on: ubuntu-latest
@@ -122,18 +120,17 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Build and push backend Docker image
-        run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t saowwapark/incnv-backend:v${{ needs.check-version.outputs.current_version }} -t saowwapark/incnv-backend:latest ./backend --push
-
-      - name: Push Docker images to Docker Hub
+      - name: Login to Docker Hub
         run: |
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-          docker push saowwapark/incnv-backend:v${{ needs.check-version.outputs.current_version }}
-          docker push saowwapark/incnv-backend:latest
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push incnv-backend Docker image
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64 -t saowwapark/incnv-backend:v${{ needs.check-version.outputs.current_version }} -t saowwapark/incnv-backend:latest ./backend --push
+
           
   add-tag-version:
     runs-on: ubuntu-latest
@@ -162,3 +159,4 @@ jobs:
         run: |
           git tag "v${{ needs.check-version.outputs.current_version }}"
           git push origin "v${{ needs.check-version.outputs.current_version }}"
+          echo "Add tag v${{ steps.read-current-app-json.outputs.current_version }} finished."
