@@ -6,8 +6,6 @@ on:
       - CNV-614  # Trigger on push to main branch
     paths:
       - '**'  # Trigger only when app.json is changed
-      - 'app.json'
-      - 'docker-compose.yml'
 env:
   NODE_VERSION: '20'
 jobs:
@@ -15,8 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       CURRENT_APP_VERSION: ${{ steps.read-current-app-json.outputs.CURRENT_APP_VERSION }}
-      version_changed: ${{ steps.version_check.outputs.version_changed }}
+      IS_VERSION_CHANGED: ${{ steps.version_check.outputs.IS_VERSION_CHANGED }}
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Read current app.json version
         id: read-current-app-json
         run: |
@@ -41,14 +42,15 @@ jobs:
         run: |
           if [ "$CURRENT_APP_VERSION" != "$PREVIOUS_APP_VERSION" ]; then
             echo "Version has changed."
-            echo "::set-output name=version_changed::true"
+            echo "::set-output name=IS_VERSION_CHANGED::true"
           else
             echo "Version has not changed."
-            echo "::set-output name=version_changed::false"
+            echo "::set-output name=IS_VERSION_CHANGED::false"
           fi
-  check-match-version:
+  check-matched-version:
     runs-on: ubuntu-latest
     needs: check-updated-version
+    if: needs.check-updated-version.outputs.IS_VERSION_CHANGED == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -73,8 +75,8 @@ jobs:
 
   install-and-build-frontend:
     runs-on: ubuntu-latest
-    needs: [check-updated-version, check-match-version]
-    if: needs.check-updated-version.outputs.version_changed == 'true'
+    needs: [check-updated-version, check-matched-version]
+    if: needs.check-updated-version.outputs.IS_VERSION_CHANGED == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -94,8 +96,8 @@ jobs:
 
   install-and-build-backend:
     runs-on: ubuntu-latest
-    needs: [check-updated-version, check-match-version]
-    if: needs.check-updated-version.outputs.version_changed == 'true'
+    needs: [check-updated-version, check-matched-version]
+    if: needs.check-updated-version.outputs.IS_VERSION_CHANGED == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
