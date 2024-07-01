@@ -57,13 +57,15 @@ jobs:
 
       - name: Extract versions from docker-compose.yml
         run: |
-          DOCKER_VERSION=$(grep "version:" docker-compose.yml | awk '{print $2}' | tr -d "'")
-          RONTEND_IMAGE_VERSION=$(grep "image: incnv-frontend:" docker-compose.yml | awk -F: '{print $2}')
+          DOCKER_VERSION=$(grep "version:" docker-compose/docker-compose.yml | awk '{print $2}' | tr -d "'")
+          FRONTEND_IMAGE_VERSION=$(grep "image: incnv-frontend:" docker-compose.yml | awk -F: '{print $2}')
           BACKEND_IMAGE_VERSION=$(grep "image: incnv-backend:" docker-compose.yml | awk -F: '{print $2}')
 
-          echo "Docker Compose version: $DOCKER_VERSION"
-          echo "Frontend image version: $FRONTEND_IMAGE_VERSION"
-          echo "Backend image version: $BACKEND_IMAGE_VERSION"
+          echo "DOCKER_VERSION: $DOCKER_VERSION"
+          echo "FRONTEND_IMAGE_VERSION: $FRONTEND_IMAGE_VERSION"
+          echo "BACKEND_IMAGE_VERSION: $BACKEND_IMAGE_VERSION"
+          echo "CURRENT_APP_VERSION=${{needs.check-updated-version.outputs.CURRENT_APP_VERSION}}" >> $GITHUB_ENV
+          echo "CURRENT_APP_VERSION: $CURRENT_APP_VERSION"
       - name: Check matched version
         run: |
           if [[ "$CURRENT_APP_VERSION" == "$DOCKER_VERSION" && "$CURRENT_APP_VERSION" == "$FRONTEND_IMAGE_VERSION" && "$CURRENT_APP_VERSION" == "$BACKEND_IMAGE_VERSION" ]]; then
