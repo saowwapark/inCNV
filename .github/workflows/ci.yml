@@ -64,7 +64,7 @@ jobs:
       - name: Print
         run: |
           echo "image tag version = v${{ needs.check-version.outputs.current_version }}"
-          echo "current_version = v${{ needs.check-version.outputs.current_version }}"
+          echo "current_version = ${{ needs.check-version.outputs.current_version }}"
 
 
   add-tag-version:
@@ -75,4 +75,4 @@ jobs:
       - name: Print
         run: |
           echo "image tag version = v${{ needs.check-version.outputs.current_version }}"
-          echo "current_version = v${{ needs.check-version.outputs.current_version }}"
+          echo "current_version = ${{ needs.check-version.outputs.current_version }}"
