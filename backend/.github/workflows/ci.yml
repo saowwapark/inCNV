@@ -3,11 +3,6 @@ name: Backend Pipeline
 
 on:
   pull_request:
-    types:
-        - opened
-        - synchronize
-        - closed
-        - reopened
     branches:
       - '**'  # Trigger on pull request to any branch
 
