@@ -58,7 +58,7 @@ jobs:
       
   create-frontend-image:
     runs-on: ubuntu-latest
-    needs: install-and-build-frontend
+    needs: [check-version, install-and-build-frontend]
 
     steps:
       - name: Print
@@ -68,7 +68,7 @@ jobs:
 
   add-tag-version:
     runs-on: ubuntu-latest
-    needs: [create-frontend-image]
+    needs: [check-version, create-frontend-image]
 
     steps:
       - name: Print
