@@ -31,7 +31,7 @@ jobs:
       - name: Read previous app.json version
         id: read-previous-app-json
         run: |
-          git show origin/main:incnv/app.json > previous_app.json
+          git show origin/main:app.json > previous_app.json
           previous_version=$(jq -r '.version' previous_app.json)
           echo "previous_version=${previous_version}" >> $GITHUB_ENV
     
