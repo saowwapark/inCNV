@@ -24,6 +24,7 @@ jobs:
           current_version=$(jq -r '.version' ./app.json)
           echo "current_version=${current_version}" >> $GITHUB_ENV
           echo "::set-output name=current_version::${current_version}"
+          echo "Current version: ${current_version}"
 
       - name: Fetch previous version of app.json
         run: git fetch origin main:refs/remotes/origin/main
@@ -31,7 +32,7 @@ jobs:
       - name: Read previous app.json version
         id: read-previous-app-json
         run: |
-          git show origin/main:app.json > previous_app.json
+          git show origin/main~1:app.json > previous_app.json
           previous_version=$(jq -r '.version' previous_app.json)
           echo "previous_version=${previous_version}" >> $GITHUB_ENV
     
@@ -49,114 +50,29 @@ jobs:
   install-and-build-frontend:
     runs-on: ubuntu-latest
     needs: check-version
-    if: needs.check-version.outputs.version_changed == 'true'
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js for frontend
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install frontend dependencies
-        run: npm install
-        working-directory: ./frontend
-
-      - name: Build frontend project
-        run: npm run build
-        working-directory: ./frontend
-
-  install-and-build-backend:
-    runs-on: ubuntu-latest
-    needs: check-version
-    if: needs.check-version.outputs.version_changed == 'true'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js for frontend
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - name: Install backend dependencies
-        run: npm install
-        working-directory: ./backend
-
-      - name: Build backend project
-        run: npm run build
-        working-directory: ./backend
+      - name: Print
+        run: echo "needs.check-version.outputs.version_changed=${{needs.check-version.outputs.version_changed}}"
+              echo "needs.check-version.outputs.current_version=${{needs.check-version.outputs.current_version}}"
+        
       
   create-frontend-image:
     runs-on: ubuntu-latest
     needs: install-and-build-frontend
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Login to Docker Hub
+      - name: Print
         run: |
-          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          echo "image tag version = v${{ needs.check-version.outputs.current_version }}"
+          echo "current_version = v${{ needs.check-version.outputs.current_version }}"
 
-      - name: Build and push incnv-frontend Docker image
-        run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t saowwapark/incnv-frontend:v${{ needs.check-version.outputs.current_version }} -t saowwapark/incnv-frontend:latest ./frontend --push
 
-  create-backend-image:
-    runs-on: ubuntu-latest
-    needs: install-and-build-backend
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Login to Docker Hub
-        run: |
-          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and push incnv-backend Docker image
-        run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t saowwapark/incnv-backend:v${{ needs.check-version.outputs.current_version }} -t saowwapark/incnv-backend:latest ./backend --push
-
-          
   add-tag-version:
     runs-on: ubuntu-latest
-    needs: [create-frontend-image, create-backend-image]
+    needs: [create-frontend-image]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Fetch tags from remote
-        run: git fetch --tags
-
-      - name: Check if tag already exists
-        id: tag-check
+      - name: Print
         run: |
-          if git rev-parse "v${{ needs.check-version.outputs.current_version }}" >/dev/null 2>&1; then
-            echo "Tag v${{ needs.check-version.outputs.current_version }} already exists."
-            echo "::set-output name=tag_exists::true"
-          else
-            echo "Tag v${{ needs.check-version.outputs.current_version }} does not exist."
-            echo "::set-output name=tag_exists::false"
-          fi
-
-      - name: Create tag if not exists
-        if: needs.check-version.outputs.tag_exists == 'false'
-        run: |
-          git tag "v${{ needs.check-version.outputs.current_version }}"
-          git push origin "v${{ needs.check-version.outputs.current_version }}"
-          echo "Add tag v${{ steps.read-current-app-json.outputs.current_version }} finished."
+          echo "image tag version = v${{ needs.check-version.outputs.current_version }}"
+          echo "current_version = v${{ needs.check-version.outputs.current_version }}"

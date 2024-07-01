@@ -5,7 +5,7 @@ on:
     branches:
       - CNV-614  # Trigger on push to main branch
     paths:
-      - 'app.json'  # Trigger only when app.json is changed
+      - '**'  # Trigger only when app.json is changed
 env:
   NODE_VERSION: '20'
 jobs:
@@ -24,6 +24,7 @@ jobs:
           current_version=$(jq -r '.version' ./app.json)
           echo "current_version=${current_version}" >> $GITHUB_ENV
           echo "::set-output name=current_version::${current_version}"
+          echo "Current version: ${current_version}"
 
       - name: Fetch previous version of app.json
         run: git fetch origin main:refs/remotes/origin/main
@@ -31,7 +32,7 @@ jobs:
       - name: Read previous app.json version
         id: read-previous-app-json
         run: |
-          git show origin/main:incnv/app.json > previous_app.json
+          git show origin/main:app.json > previous_app.json
           previous_version=$(jq -r '.version' previous_app.json)
           echo "previous_version=${previous_version}" >> $GITHUB_ENV
     
@@ -98,18 +99,16 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Build and push frontend Docker image
-        run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t saowwapark/incnv-frontend:v${{ needs.check-version.outputs.current_version }} -t saowwapark/incnv-frontend:latest ./frontend --push
-
-      - name: Push Docker images to Docker Hub
+      - name: Login to Docker Hub
         run: |
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-          docker push saowwapark/incnv-frontend:v${{ needs.check-version.outputs.current_version }}
-          docker push saowwapark/incnv-frontend:latest
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push incnv-frontend Docker image
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64 -t saowwapark/incnv-frontend:v${{ needs.check-version.outputs.current_version }} -t saowwapark/incnv-frontend:latest ./frontend --push
 
   create-backend-image:
     runs-on: ubuntu-latest
@@ -122,18 +121,17 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Build and push backend Docker image
-        run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t saowwapark/incnv-backend:v${{ needs.check-version.outputs.current_version }} -t saowwapark/incnv-backend:latest ./backend --push
-
-      - name: Push Docker images to Docker Hub
+      - name: Login to Docker Hub
         run: |
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-          docker push saowwapark/incnv-backend:v${{ needs.check-version.outputs.current_version }}
-          docker push saowwapark/incnv-backend:latest
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push incnv-backend Docker image
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64 -t saowwapark/incnv-backend:v${{ needs.check-version.outputs.current_version }} -t saowwapark/incnv-backend:latest ./backend --push
+
           
   add-tag-version:
     runs-on: ubuntu-latest
@@ -162,3 +160,4 @@ jobs:
         run: |
           git tag "v${{ needs.check-version.outputs.current_version }}"
           git push origin "v${{ needs.check-version.outputs.current_version }}"
+          echo "Add tag v${{ needs.read-current-app-json.outputs.current_version }} finished."
