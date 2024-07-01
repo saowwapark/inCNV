@@ -7,13 +7,19 @@ on:
 env:
   NODE_VERSION: '20'
 jobs:
-  create-frontend-image:
+  check-version:
     runs-on: ubuntu-latest
-
+    outputs:
+      current_version: ${{ steps.read-current-app-json.outputs.current_version }}
+      version_changed: ${{ steps.version_check.outputs.version_changed }}
     steps:
-      - name: Push Docker images to Docker Hub
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Read current app.json version
+        id: read-current-app-json
         run: |
-          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          current_version=$(jq -r '.version' ./app.json)
+          echo "current_version=${current_version}" >> $GITHUB_ENV
+          echo "::set-output name=current_version::${current_version}"
+          echo -e "\033[32mCurrent version: ${current_version}\033[0m"  # Print in green
