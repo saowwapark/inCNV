@@ -9,9 +9,6 @@ env:
 jobs:
   check-version:
     runs-on: ubuntu-latest
-    outputs:
-      current_version: ${{ steps.read-current-app-json.outputs.current_version }}
-      version_changed: ${{ steps.version_check.outputs.version_changed }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -23,3 +20,11 @@ jobs:
           echo "current_version=${current_version}" >> $GITHUB_ENV
           echo "::set-output name=current_version::${current_version}"
           echo -e "\033[32mCurrent version: ${current_version}\033[0m"  # Print in green
+  print-version-in-other-job:
+    runs-on: ubuntu-latest
+    needs: check-version
+    steps:
+      - name: print
+        id: test
+        run: echo "v${{ steps.read-current-app-json.outputs.current_version }} from output"
+             echo "v${{ needs.check-version.outputs.current_version }} from needs"
