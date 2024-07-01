@@ -9,6 +9,8 @@ env:
 jobs:
   check-version:
     runs-on: ubuntu-latest
+    outputs:
+      current_version: ${{ steps.read-current-app-json.outputs.current_version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
