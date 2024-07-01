@@ -5,7 +5,7 @@ on:
     branches:
       - CNV-614  # Trigger on push to main branch
     paths:
-      - 'app.json'  # Trigger only when app.json is changed
+      - '**'  # Trigger only when app.json is changed
 env:
   NODE_VERSION: '20'
 jobs:
