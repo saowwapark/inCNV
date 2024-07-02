@@ -151,10 +151,14 @@ jobs:
     env:
       FRONTEND_IMAGE_VERSION: ${{needs.check-docker-compose-version.outputs.FRONTEND_IMAGE_VERSION}}
     steps:
-      - name: Checkout code v${FRONTEND_IMAGE_VERSION}
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Init frontend submodule
         run: |
-            git submodule update --init --recursive
+            git submodule update --init frontend
             cd frontend
+            git submodule update --init --recursive
             git fetch --tags
             git checkout v${FRONTEND_IMAGE_VERSION}
 
@@ -178,10 +182,14 @@ jobs:
     env:
       BACKEND_IMAGE_VERSION: ${{needs.check-docker-compose-version.outputs.BACKEND_IMAGE_VERSION}}
     steps:
-      - name: Checkout code v${BACKEND_IMAGE_VERSION}
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Init backend submodule
         run: |
-            git submodule update --init --recursive
+            git submodule update --init backend
             cd backend
+            git submodule update --init --recursive
             git fetch --tags
             git checkout v${BACKEND_IMAGE_VERSION}
 
@@ -217,14 +225,14 @@ jobs:
         run: |
           if git rev-parse "v${CURRENT_APP_VERSION}" >/dev/null 2>&1; then
             echo "Tag v${CURRENT_APP_VERSION} already exists."
-            echo "::set-output name=tag_exists::true"
+            echo "IS_TAG_EXIST=true" >> $GITHUB_OUTPUT
           else
             echo "Tag v${CURRENT_APP_VERSION} does not exist."
-            echo "::set-output name=tag_exists::false"
+            echo "IS_TAG_EXIST=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Create tag if not exists
-        if: steps.tag-check.outputs.tag_exists == 'false'
+        if:  steps.tag-check.outputs.IS_TAG_EXIST == 'false' 
         run: |
           git tag "v${CURRENT_APP_VERSION}"
           git push origin "v${CURRENT_APP_VERSION}"
