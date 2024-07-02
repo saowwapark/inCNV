@@ -21,8 +21,8 @@ jobs:
         id: read-current-app-json
         run: |
           CURRENT_APP_VERSION=$(jq -r '.version' ./app.json)
-          echo "CURRENT_APP_VERSION=${CURRENT_APP_VERSION}" >> GITHUB_OUTPUT
-          echo "CURRENT_APP_VERSION=${CURRENT_APP_VERSION}" >> GITHUB_ENV
+          echo "CURRENT_APP_VERSION=${CURRENT_APP_VERSION}" >> $GITHUB_OUTPUT
+          echo "CURRENT_APP_VERSION=${CURRENT_APP_VERSION}" >> $GITHUB_ENV
           echo "CURRENT_APP_VERSION: ${CURRENT_APP_VERSION}"
 
       - name: Read previous app.json version
@@ -31,7 +31,7 @@ jobs:
           git fetch origin main:refs/remotes/origin/main
           git show origin/main:app.json > previous_app.json
           PREVIOUS_APP_VERSION=$(jq -r '.version' previous_app.json)
-          echo "PREVIOUS_APP_VERSION=${PREVIOUS_APP_VERSION}" >> GITHUB_ENV
+          echo "PREVIOUS_APP_VERSION=${PREVIOUS_APP_VERSION}" >> $GITHUB_ENV
           echo "PREVIOUS_APP_VERSION=${PREVIOUS_APP_VERSION}"
           
       - name: Check if version has changed
