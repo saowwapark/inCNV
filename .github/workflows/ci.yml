@@ -94,10 +94,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Checkout code v${FRONTEND_IMAGE_VERSION}
+        
+      - name: Init frontend submodule
         run: |
-            git submodule update --init --recursive
+            git submodule update --init frontend
             cd frontend
+            git submodule update --init --recursive
             git fetch --tags
             git checkout v${FRONTEND_IMAGE_VERSION}
 
@@ -120,10 +122,11 @@ jobs:
     env:
       BACKEND_IMAGE_VERSION: ${{needs.check-docker-compose-version.outputs.BACKEND_IMAGE_VERSION}}
     steps:
-      - name: Checkout code v${BACKEND_IMAGE_VERSION}
+      - name: Init backend submodule
         run: |
-            git submodule update --init --recursive
+            git submodule update --init backend
             cd backend
+            git submodule update --init --recursive
             git fetch --tags
             git checkout v${BACKEND_IMAGE_VERSION}
 
