@@ -1,7 +1,7 @@
 version: '2.0.0'
 services:
   incnv-frontend:
-    image: incnv-frontend:2.3.0
+    image: incnv-frontend:2.4.0
     container_name: incnv-frontend
     restart: always
     networks:
