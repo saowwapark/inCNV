@@ -36,8 +36,8 @@ jobs:
       - name: Check if version has changed
         id: version_check
         run: |
-          echo "CURRENT_APP_VERSION=${{ steps.read-current-app-json.outputs.CURRENT_APP_VERSION }}"
-          echo "PREVIOUS_APP_VERSION=${{steps.read-current-app-json.outputs.PREVIOUS_APP_VERSION}}"
+          echo "CURRENT_APP_VERSION=${{ env.CURRENT_APP_VERSION }}"
+          echo "PREVIOUS_APP_VERSION=${{ env.PREVIOUS_APP_VERSION}}"
           if [ "$CURRENT_APP_VERSION" != "$PREVIOUS_APP_VERSION" ]; then
             echo "Version has changed from $PREVIOUS_APP_VERSION to $CURRENT_APP_VERSION."
           else
