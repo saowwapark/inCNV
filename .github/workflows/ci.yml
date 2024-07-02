@@ -39,7 +39,7 @@ jobs:
             echo "Version has changed from $PREVIOUS_APP_VERSION to $CURRENT_APP_VERSION."
           else
             echo "CURRENT_APP_VERSION=$CURRENT_APP_VERSION"
-            echo "PREVIOUS_APP_VERSION"=$PREVIOUS_APP_VERSION"
+            echo "PREVIOUS_APP_VERSION=$PREVIOUS_APP_VERSION"
             exit 1
           fi
   
