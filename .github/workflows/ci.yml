@@ -37,13 +37,12 @@ jobs:
       - name: Check if version has changed
         id: version_check
         run: |
-          echo "PREVIOUS_APP_VERSION=${PREVIOUS_APP_VERSION}"
+          echo "CURRENT_APP_VERSION=$CURRENT_APP_VERSION"
+          echo "PREVIOUS_APP_VERSION=$PREVIOUS_APP_VERSION"
           if [ "$CURRENT_APP_VERSION" != "$PREVIOUS_APP_VERSION" ]; then
             echo "Version has changed from $PREVIOUS_APP_VERSION to $CURRENT_APP_VERSION."
           else
             echo "Version isn't updated."
-            echo "CURRENT_APP_VERSION=$CURRENT_APP_VERSION"
-            echo "PREVIOUS_APP_VERSION=$PREVIOUS_APP_VERSION"
             exit 1
           fi
   
@@ -64,8 +63,8 @@ jobs:
         id: read-docker-compose
         run: |
           DOCKER_VERSION=$(grep "version:" docker-compose/docker-compose.yml | awk '{print $2}' | tr -d "'")
-          FRONTEND_IMAGE_VERSION=$(grep "image: incnv-frontend:" docker-compose/docker-compose.yml | awk -F: '{print $2}')
-          BACKEND_IMAGE_VERSION=$(grep "image: incnv-backend:" docker-compose/docker-compose.yml | awk -F: '{print $2}')
+          FRONTEND_IMAGE_VERSION=$(grep "image: incnv-frontend:" docker-compose/docker-compose.yml | awk -F: '{print $3}')
+          BACKEND_IMAGE_VERSION=$(grep "image: incnv-backend:" docker-compose/docker-compose.yml | awk -F: '{print $3}')
 
           echo "DOCKER_VERSION: $DOCKER_VERSION"
           echo "FRONTEND_IMAGE_VERSION: $FRONTEND_IMAGE_VERSION"
