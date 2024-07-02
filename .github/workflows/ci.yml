@@ -22,6 +22,7 @@ jobs:
         run: |
           CURRENT_APP_VERSION=$(jq -r '.version' ./app.json)
           echo "CURRENT_APP_VERSION=${CURRENT_APP_VERSION}" >> GITHUB_OUTPUT
+          echo "CURRENT_APP_VERSION=${CURRENT_APP_VERSION}" >> GITHUB_ENV
           echo "CURRENT_APP_VERSION: ${CURRENT_APP_VERSION}"
 
       - name: Read previous app.json version
@@ -37,7 +38,9 @@ jobs:
         id: version_check
         run: |
           echo "CURRENT_APP_VERSION=${{ env.CURRENT_APP_VERSION }}"
+          echo "CURRENT_APP_VERSION=${{ steps.read-current-app-json.CURRENT_APP_VERSION }}"
           echo "PREVIOUS_APP_VERSION=${{ env.PREVIOUS_APP_VERSION}}"
+          echo "PREVIOUS_APP_VERSION=${PREVIOUS_APP_VERSION}"
           if [ "$CURRENT_APP_VERSION" != "$PREVIOUS_APP_VERSION" ]; then
             echo "Version has changed from $PREVIOUS_APP_VERSION to $CURRENT_APP_VERSION."
           else
