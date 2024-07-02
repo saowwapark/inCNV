@@ -1,7 +1,7 @@
-version: '2.4'
+version: '2.0.0'
 services:
   incnv-frontend:
-    image: incnv-frontend:2.2.0
+    image: incnv-frontend:2.4.0
     container_name: incnv-frontend
     restart: always
     networks:
@@ -13,7 +13,7 @@ services:
     command: /bin/sh -c "envsubst '$${FRONTEND_PORT}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
   
   incnv-backend:
-    image: incnv-backend:2.1.0
+    image: incnv-backend:2.2.0
     container_name: incnv-backend
     restart: always
     environment:
