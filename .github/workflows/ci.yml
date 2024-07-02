@@ -92,6 +92,8 @@ jobs:
     env:
       FRONTEND_IMAGE_VERSION: ${{needs.check-docker-compose-version.outputs.FRONTEND_IMAGE_VERSION}}
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Checkout code v${FRONTEND_IMAGE_VERSION}
         run: |
             git submodule update --init --recursive
