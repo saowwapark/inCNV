@@ -30,6 +30,7 @@ jobs:
           git fetch origin main:refs/remotes/origin/main
           git show origin/main:app.json > previous_app.json
           PREVIOUS_APP_VERSION=$(jq -r '.version' previous_app.json)
+          echo "PREVIOUS_APP_VERSION=${PREVIOUS_APP_VERSION} >> GITHUB_ENV"
           echo "PREVIOUS_APP_VERSION=${PREVIOUS_APP_VERSION}"
           
       - name: Check if version has changed
@@ -38,8 +39,8 @@ jobs:
           if [ "$CURRENT_APP_VERSION" != "$PREVIOUS_APP_VERSION" ]; then
             echo "Version has changed from $PREVIOUS_APP_VERSION to $CURRENT_APP_VERSION."
           else
-            echo "CURRENT_APP_VERSION=$CURRENT_APP_VERSION"
-            echo "PREVIOUS_APP_VERSION=$PREVIOUS_APP_VERSION"
+            echo "CURRENT_APP_VERSION=${CURRENT_APP_VERSION}"
+            echo "PREVIOUS_APP_VERSION=${PREVIOUS_APP_VERSION}"
             exit 1
           fi
   
