@@ -1,4 +1,4 @@
-version: '2.0.1'
+version: '2.0.2'
 services:
   incnv-frontend:
     image: saowwapark/incnv-frontend:2.4.0
@@ -30,8 +30,7 @@ services:
     networks:
       - incnv-network
     volumes:
-      - datasources-volume:/usr/src/app/volumes/datasources_volume
-      - analysis-results-volume:/usr/src/app/volumes/analysis_results_volume
+      - datasources-volume:/usr/app/dist/volumes/datasources_volume
     depends_on:
       incnv-databases:
         condition: service_healthy
@@ -73,7 +72,6 @@ services:
 volumes:
   databases-volume:
   datasources-volume:
-  analysis-results-volume:
 
 networks:
   incnv-network: {}
