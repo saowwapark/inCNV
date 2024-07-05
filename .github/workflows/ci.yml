@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Read current app.json version
         id: read-current-app-json
@@ -29,7 +31,6 @@ jobs:
         id: read-previous-app-json
         run: |
           git fetch origin main:refs/remotes/origin/main
-          git checkout main
           git checkout HEAD~1
           git show origin/main:app.json > previous_app.json
           PREVIOUS_APP_VERSION=$(jq -r '.version' previous_app.json)
