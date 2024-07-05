@@ -2,61 +2,17 @@ name: Build and Deploy Docker Images
 on:
   push:
     branches:
-      - main
+      - build-image/*
     paths:
       - 'app.json'
-    
 env:
   NODE_VERSION: '20'
 jobs:
-  check-updated-app-version:
-    runs-on: ubuntu-latest
-    outputs:
-      CURRENT_APP_VERSION: ${{ steps.read-current-app-json.outputs.CURRENT_APP_VERSION }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Read current app.json version
-        id: read-current-app-json
-        run: |
-          CURRENT_APP_VERSION=$(jq -r '.version' ./app.json)
-          echo "CURRENT_APP_VERSION=${CURRENT_APP_VERSION}" >> $GITHUB_OUTPUT
-          echo "CURRENT_APP_VERSION=${CURRENT_APP_VERSION}" >> $GITHUB_ENV
-          echo "CURRENT_APP_VERSION=${CURRENT_APP_VERSION}"
-
-      - name: Read previous app.json version
-        id: read-previous-app-json
-        run: |
-          git fetch origin main:refs/remotes/origin/main
-          git checkout HEAD~1
-          git show origin/main:app.json > previous_app.json
-          PREVIOUS_APP_VERSION=$(jq -r '.version' previous_app.json)
-          echo "PREVIOUS_APP_VERSION=${PREVIOUS_APP_VERSION}" >> $GITHUB_ENV
-          echo "PREVIOUS_APP_VERSION=${PREVIOUS_APP_VERSION}"
-          
-      - name: Check if version has changed
-        id: version_check
-        run: |
-          echo "CURRENT_APP_VERSION=$CURRENT_APP_VERSION"
-          echo "PREVIOUS_APP_VERSION=$PREVIOUS_APP_VERSION"
-          if [ "$CURRENT_APP_VERSION" != "$PREVIOUS_APP_VERSION" ]; then
-            echo "Version has changed from $PREVIOUS_APP_VERSION to $CURRENT_APP_VERSION."
-          else
-            echo "Version isn't updated."
-            exit 1
-          fi
-  
   get-image-version:
     runs-on: ubuntu-latest
-    needs: check-updated-app-version
     outputs:
       CURRENT_FRONTEND_IMAGE_VERSION: ${{ steps.get-current-image-version.outputs.CURRENT_FRONTEND_IMAGE_VERSION }}
       CURRENT_BACKEND_IMAGE_VERSION: ${{ steps.get-current-image-version.outputs.CURRENT_BACKEND_IMAGE_VERSION }}
-      PREVIOUS_FRONTEND_IMAGE_VERSION: ${{ steps.get-previous-frontend-image-version.outputs.PREVIOUS_FRONTEND_IMAGE_VERSION }}
-      PREVIOUS_BACKEND_IMAGE_VERSION: ${{ steps.get-previous-backend-image-version.outputs.PREVIOUS_BACKEND_IMAGE_VERSION }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -72,64 +28,14 @@ jobs:
 
           echo "CURRENT_FRONTEND_IMAGE_VERSION=$CURRENT_FRONTEND_IMAGE_VERSION" >> $GITHUB_OUTPUT
           echo "CURRENT_BACKEND_IMAGE_VERSION=$CURRENT_BACKEND_IMAGE_VERSION" >> $GITHUB_OUTPUT
-      
-      - name: Init all submodules
-        run: |
-           git submodule update --init --recursive
-  
-      - name: Get previous frontend image version
-        id: get-previous-frontend-image-version
-        run: |
-          cd frontend
-          git fetch --tags
-          
-          # Check if there are at least two tags
-          TAG_COUNT=$(git tag | wc -l)
-          if [ "$TAG_COUNT" -lt 2 ]; then
-            echo "Not enough tags to determine the previous tag."
-            exit 1
-          fi
 
-          PREVIOUS_FRONTEND_IMAGE_VERSION=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))
-          echo "PREVIOUS_FRONTEND_IMAGE_VERSION=${PREVIOUS_FRONTEND_IMAGE_VERSION}"
-          echo "PREVIOUS_FRONTEND_IMAGE_VERSION=${PREVIOUS_FRONTEND_IMAGE_VERSION}" >> $GITHUB_OUTPUT
-      
-      - name: Get previous backend image version
-        id: get-previous-backend-image-version
-        run: |
-          cd backend
-          git fetch --tags
 
-          # Check if there are at least two tags
-          TAG_COUNT=$(git tag | wc -l)
-          if [ "$TAG_COUNT" -lt 2 ]; then
-            echo "Not enough tags to determine the previous tag."
-            exit 1
-          fi
-
-          PREVIOUS_BACKEND_IMAGE_VERSION=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))
-          echo "PREVIOUS_BACKEND_IMAGE_VERSION=${PREVIOUS_BACKEND_IMAGE_VERSION}"
-          echo "PREVIOUS_BACKEND_IMAGE_VERSION=${PREVIOUS_BACKEND_IMAGE_VERSION}" >> $GITHUB_OUTPUT
-  
   create-frontend-image:
     runs-on: ubuntu-latest
     needs: [get-image-version]
     env:
       CURRENT_FRONTEND_IMAGE_VERSION: ${{needs.get-image-version.outputs.CURRENT_FRONTEND_IMAGE_VERSION}}
-      PREVIOUS_FRONTEND_IMAGE_VERSION: ${{needs.get-image-version.outputs.PREVIOUS_FRONTEND_IMAGE_VERSION}}
     steps:
-      - name: Check updated frontend
-        run: |
-           echo "CURRENT_FRONTEND_IMAGE_VERSION=${CURRENT_FRONTEND_IMAGE_VERSION}"
-           echo "PREVIOUS_FRONTEND_IMAGE_VERSION=${PREVIOUS_FRONTEND_IMAGE_VERSION}"
-           if [[ "$CURRENT_FRONTEND_IMAGE_VERSION" != "$PREVIOUS_FRONTEND_IMAGE_VERSION" ]]; then
-             echo "CURRENT_FRONTEND_IMAGE_VERSION isn't equal to PREVIOUS_FRONTEND_IMAGE_VERSION"
-             echo "Should create a newer frontend image version."
-           else
-             echo "CURRENT_FRONTEND_IMAGE_VERSION is equal to PREVIOUS_FRONTEND_IMAGE_VERSION"
-             echo "No need to duplicate the frontend image version."
-             exit 1
-           fi
       - name: Checkout code
         uses: actions/checkout@v2
         
@@ -173,20 +79,7 @@ jobs:
     needs: [get-image-version]
     env:
       CURRENT_BACKEND_IMAGE_VERSION: ${{needs.get-image-version.outputs.CURRENT_BACKEND_IMAGE_VERSION}}
-      PREVIOUS_BACKEND_IMAGE_VERSION: ${{needs.get-image-version.outputs.PREVIOUS_BACKEND_IMAGE_VERSION}}
     steps:
-      - name: Check updated frontend
-        run: |
-           echo "CURRENT_BACKEND_IMAGE_VERSION=${CURRENT_BACKEND_IMAGE_VERSION}"
-           echo "PREVIOUS_BACKEND_IMAGE_VERSION=${PREVIOUS_BACKEND_IMAGE_VERSION}"
-           if [[ "$CURRENT_BACKEND_IMAGE_VERSION" != "$PREVIOUS_BACKEND_IMAGE_VERSION" ]]; then
-             echo "CURRENT_BACKEND_IMAGE_VERSION isn't equal to PREVIOUS_BACKEND_IMAGE_VERSION"
-             echo "Should create a newer backend image version."
-           else
-             echo "CURRENT_BACKEND_IMAGE_VERSION is equal to PREVIOUS_BACKEND_IMAGE_VERSION"
-             echo "No need to duplicate the backend image version."
-             exit 1
-           fi
       - name: Checkout code
         uses: actions/checkout@v2
         
@@ -211,34 +104,3 @@ jobs:
       - name: Build and push incnv-backend Docker image
         run: |
           docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.DOCKER_USERNAME }}/incnv-backend:${CURRENT_BACKEND_IMAGE_VERSION} -t ${{ secrets.DOCKER_USERNAME }}/incnv-backend:latest ./backend --push
-
-          
-  add-tag-version:
-    runs-on: ubuntu-latest
-    needs: [check-updated-app-version, create-frontend-image, create-backend-image]
-    env:
-      CURRENT_APP_VERSION: ${{ needs.check-updated-app-version.outputs.CURRENT_APP_VERSION }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Fetch tags from remote
-        run: git fetch --tags
-
-      - name: Check if tag already exists
-        id: tag-check
-        run: |
-          if git rev-parse "v${CURRENT_APP_VERSION}" >/dev/null 2>&1; then
-            echo "Tag v${CURRENT_APP_VERSION} already exists."
-            echo "IS_TAG_EXIST=true" >> $GITHUB_OUTPUT
-          else
-            echo "Tag v${CURRENT_APP_VERSION} does not exist."
-            echo "IS_TAG_EXIST=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Create tag if not exists
-        if:  steps.tag-check.outputs.IS_TAG_EXIST == 'false' 
-        run: |
-          git tag "v${CURRENT_APP_VERSION}"
-          git push origin "v${CURRENT_APP_VERSION}"
-          echo "Add tag v${CURRENT_APP_VERSION} finished."
