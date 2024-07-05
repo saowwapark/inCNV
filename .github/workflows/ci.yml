@@ -1,17 +1,15 @@
 name: Build and Deploy Docker Images
-
 on:
   push:
-    branches-ignore:
+    branches:
       - main
     paths:
       - 'app.json'
-      - 'docker-compose/docker-compose.yml'
-      - '.github/workflows/ci.yml'
+    
 env:
   NODE_VERSION: '20'
 jobs:
-  check-updated-version:
+  check-updated-app-version:
     runs-on: ubuntu-latest
     outputs:
       CURRENT_APP_VERSION: ${{ steps.read-current-app-json.outputs.CURRENT_APP_VERSION }}
@@ -31,6 +29,8 @@ jobs:
         id: read-previous-app-json
         run: |
           git fetch origin main:refs/remotes/origin/main
+          git checkout main
+          git checkout HEAD~1
           git show origin/main:app.json > previous_app.json
           PREVIOUS_APP_VERSION=$(jq -r '.version' previous_app.json)
           echo "PREVIOUS_APP_VERSION=${PREVIOUS_APP_VERSION}" >> $GITHUB_ENV
@@ -48,119 +48,110 @@ jobs:
             exit 1
           fi
   
-  check-docker-compose-version:
+  get-image-version:
     runs-on: ubuntu-latest
-    needs: check-updated-version
-    env: 
-      CURRENT_APP_VERSION: ${{needs.check-updated-version.outputs.CURRENT_APP_VERSION}}
+    needs: check-updated-app-version
     outputs:
-      DOCKER_VERSION: ${{ steps.read-docker-compose.outputs.DOCKER_VERSION }}
-      FRONTEND_IMAGE_VERSION: ${{ steps.read-docker-compose.outputs.FRONTEND_IMAGE_VERSION }}
-      BACKEND_IMAGE_VERSION: ${{ steps.read-docker-compose.outputs.BACKEND_IMAGE_VERSION }}
+      CURRENT_FRONTEND_IMAGE_VERSION: ${{ steps.get-current-image-version.outputs.CURRENT_FRONTEND_IMAGE_VERSION }}
+      CURRENT_BACKEND_IMAGE_VERSION: ${{ steps.get-current-image-version.outputs.CURRENT_BACKEND_IMAGE_VERSION }}
+      PREVIOUS_FRONTEND_IMAGE_VERSION: ${{ steps.get-previous-frontend-image-version.outputs.PREVIOUS_FRONTEND_IMAGE_VERSION }}
+      PREVIOUS_BACKEND_IMAGE_VERSION: ${{ steps.get-previous-backend-image-version.outputs.PREVIOUS_BACKEND_IMAGE_VERSION }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Read docker-compose.yml
-        id: read-docker-compose
+      - name: Get current image version
+        id: get-current-image-version
         run: |
-          DOCKER_VERSION=$(grep "version:" docker-compose/docker-compose.yml | awk '{print $2}' | tr -d "'")
-          FRONTEND_IMAGE_VERSION=$(grep "image: ${{ secrets.DOCKER_USERNAME }}/incnv-frontend:" docker-compose/docker-compose.yml | awk -F: '{print $3}')
-          BACKEND_IMAGE_VERSION=$(grep "image: ${{ secrets.DOCKER_USERNAME }}/incnv-backend:" docker-compose/docker-compose.yml | awk -F: '{print $3}')
+          CURRENT_FRONTEND_IMAGE_VERSION=$(grep "image: ${{ secrets.DOCKER_USERNAME }}/incnv-frontend:" docker-compose/docker-compose.yml | awk -F: '{print $3}')
+          CURRENT_BACKEND_IMAGE_VERSION=$(grep "image: ${{ secrets.DOCKER_USERNAME }}/incnv-backend:" docker-compose/docker-compose.yml | awk -F: '{print $3}')
 
-          echo "DOCKER_VERSION=$DOCKER_VERSION"
-          echo "FRONTEND_IMAGE_VERSION=$FRONTEND_IMAGE_VERSION"
-          echo "BACKEND_IMAGE_VERSION=$BACKEND_IMAGE_VERSION"
+          echo "CURRENT_FRONTEND_IMAGE_VERSION=$CURRENT_FRONTEND_IMAGE_VERSION"
+          echo "CURRENT_BACKEND_IMAGE_VERSION=$CURRENT_BACKEND_IMAGE_VERSION"
 
-          echo "DOCKER_VERSION=$DOCKER_VERSION" >> $GITHUB_OUTPUT
-          echo "DOCKER_VERSION=$DOCKER_VERSION" >> $GITHUB_ENV
-          echo "FRONTEND_IMAGE_VERSION=$FRONTEND_IMAGE_VERSION" >> $GITHUB_OUTPUT
-          echo "BACKEND_IMAGE_VERSION=$BACKEND_IMAGE_VERSION" >> $GITHUB_OUTPUT
-
-      - name: Check matched version
+          echo "CURRENT_FRONTEND_IMAGE_VERSION=$CURRENT_FRONTEND_IMAGE_VERSION" >> $GITHUB_OUTPUT
+          echo "CURRENT_BACKEND_IMAGE_VERSION=$CURRENT_BACKEND_IMAGE_VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Init all submodules
         run: |
-          if [[ "$CURRENT_APP_VERSION" == "$DOCKER_VERSION" ]]; then
-            echo "CURRENT_APP_VERSION is equal to DOCKER_VERSION"
-          else
-            echo "CURRENT_APP_VERSION isn't equal to DOCKER_VERSION"
+           git submodule update --init --recursive
+  
+      - name: Get previous frontend image version
+        id: get-previous-frontend-image-version
+        run: |
+          cd frontend
+          git fetch --tags
+          
+          # Check if there are at least two tags
+          TAG_COUNT=$(git tag | wc -l)
+          if [ "$TAG_COUNT" -lt 2 ]; then
+            echo "Not enough tags to determine the previous tag."
             exit 1
           fi
 
-  install-and-build-frontend:
+          PREVIOUS_FRONTEND_IMAGE_VERSION=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))
+          echo "PREVIOUS_FRONTEND_IMAGE_VERSION=${PREVIOUS_FRONTEND_IMAGE_VERSION}"
+          echo "PREVIOUS_FRONTEND_IMAGE_VERSION=${PREVIOUS_FRONTEND_IMAGE_VERSION}" >> $GITHUB_OUTPUT
+      
+      - name: Get previous backend image version
+        id: get-previous-backend-image-version
+        run: |
+          cd backend
+          git fetch --tags
+
+          # Check if there are at least two tags
+          TAG_COUNT=$(git tag | wc -l)
+          if [ "$TAG_COUNT" -lt 2 ]; then
+            echo "Not enough tags to determine the previous tag."
+            exit 1
+          fi
+
+          PREVIOUS_BACKEND_IMAGE_VERSION=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))
+          echo "PREVIOUS_BACKEND_IMAGE_VERSION=${PREVIOUS_BACKEND_IMAGE_VERSION}"
+          echo "PREVIOUS_BACKEND_IMAGE_VERSION=${PREVIOUS_BACKEND_IMAGE_VERSION}" >> $GITHUB_OUTPUT
+  
+  create-frontend-image:
     runs-on: ubuntu-latest
-    needs: [check-docker-compose-version]
+    needs: [get-image-version]
     env:
-      FRONTEND_IMAGE_VERSION: ${{needs.check-docker-compose-version.outputs.FRONTEND_IMAGE_VERSION}}
+      CURRENT_FRONTEND_IMAGE_VERSION: ${{needs.get-image-version.outputs.CURRENT_FRONTEND_IMAGE_VERSION}}
+      PREVIOUS_FRONTEND_IMAGE_VERSION: ${{needs.get-image-version.outputs.PREVIOUS_FRONTEND_IMAGE_VERSION}}
     steps:
+      - name: Check updated frontend
+        run: |
+           echo "CURRENT_FRONTEND_IMAGE_VERSION=${CURRENT_FRONTEND_IMAGE_VERSION}"
+           echo "PREVIOUS_FRONTEND_IMAGE_VERSION=${PREVIOUS_FRONTEND_IMAGE_VERSION}"
+           if [[ "$CURRENT_FRONTEND_IMAGE_VERSION" != "$PREVIOUS_FRONTEND_IMAGE_VERSION" ]]; then
+             echo "CURRENT_FRONTEND_IMAGE_VERSION isn't equal to PREVIOUS_FRONTEND_IMAGE_VERSION"
+             echo "Should create a newer frontend image version."
+           else
+             echo "CURRENT_FRONTEND_IMAGE_VERSION is equal to PREVIOUS_FRONTEND_IMAGE_VERSION"
+             echo "No need to duplicate the frontend image version."
+             exit 1
+           fi
       - name: Checkout code
         uses: actions/checkout@v2
         
       - name: Init frontend submodule
         run: |
-            git submodule update --init frontend
-            cd frontend
-            git submodule update --init --recursive
-            git fetch --tags
-            git checkout v${FRONTEND_IMAGE_VERSION}
+           git submodule update --init frontend
+           cd frontend
+           git submodule update --init --recursive
+           git fetch --tags
+           git checkout v${CURRENT_FRONTEND_IMAGE_VERSION}
 
       - name: Set up Node.js for frontend
         uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE_VERSION }}
-
+    
       - name: Install frontend dependencies
-        run: npm install
+        run: npm ci
         working-directory: ./frontend
 
       - name: Build frontend project
         run: npm run build
         working-directory: ./frontend
-
-  install-and-build-backend:
-    runs-on: ubuntu-latest
-    needs: [check-docker-compose-version]
-    env:
-      BACKEND_IMAGE_VERSION: ${{needs.check-docker-compose-version.outputs.BACKEND_IMAGE_VERSION}}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        
-      - name: Init backend submodule
-        run: |
-            git submodule update --init backend
-            cd backend
-            git submodule update --init --recursive
-            git fetch --tags
-            git checkout v${BACKEND_IMAGE_VERSION}
-
-      - name: Set up Node.js for backend
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - name: Install backend dependencies
-        run: npm install
-        working-directory: ./backend
-
-      - name: Build backend project
-        run: npm run build
-        working-directory: ./backend
-      
-  create-frontend-image:
-    runs-on: ubuntu-latest
-    needs: [check-docker-compose-version, install-and-build-frontend]
-    env:
-      FRONTEND_IMAGE_VERSION: ${{needs.check-docker-compose-version.outputs.FRONTEND_IMAGE_VERSION}}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        
-      - name: Init frontend submodule
-        run: |
-            git submodule update --init frontend
-            cd frontend
-            git submodule update --init --recursive
-            git fetch --tags
-            git checkout v${FRONTEND_IMAGE_VERSION}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -174,14 +165,27 @@ jobs:
 
       - name: Build and push incnv-frontend Docker image
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.DOCKER_USERNAME }}/incnv-frontend:${FRONTEND_IMAGE_VERSION} -t ${{ secrets.DOCKER_USERNAME }}/incnv-frontend:latest ./frontend --push
+          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.DOCKER_USERNAME }}/incnv-frontend:${CURRENT_FRONTEND_IMAGE_VERSION} -t ${{ secrets.DOCKER_USERNAME }}/incnv-frontend:latest ./frontend --push
 
   create-backend-image:
     runs-on: ubuntu-latest
-    needs: [check-docker-compose-version, install-and-build-backend]
+    needs: [get-image-version]
     env:
-      BACKEND_IMAGE_VERSION: ${{needs.check-docker-compose-version.outputs.BACKEND_IMAGE_VERSION}}
+      CURRENT_BACKEND_IMAGE_VERSION: ${{needs.get-image-version.outputs.CURRENT_BACKEND_IMAGE_VERSION}}
+      PREVIOUS_BACKEND_IMAGE_VERSION: ${{needs.get-image-version.outputs.PREVIOUS_BACKEND_IMAGE_VERSION}}
     steps:
+      - name: Check updated frontend
+        run: |
+           echo "CURRENT_BACKEND_IMAGE_VERSION=${CURRENT_BACKEND_IMAGE_VERSION}"
+           echo "PREVIOUS_BACKEND_IMAGE_VERSION=${PREVIOUS_BACKEND_IMAGE_VERSION}"
+           if [[ "$CURRENT_BACKEND_IMAGE_VERSION" != "$PREVIOUS_BACKEND_IMAGE_VERSION" ]]; then
+             echo "CURRENT_BACKEND_IMAGE_VERSION isn't equal to PREVIOUS_BACKEND_IMAGE_VERSION"
+             echo "Should create a newer backend image version."
+           else
+             echo "CURRENT_BACKEND_IMAGE_VERSION is equal to PREVIOUS_BACKEND_IMAGE_VERSION"
+             echo "No need to duplicate the backend image version."
+             exit 1
+           fi
       - name: Checkout code
         uses: actions/checkout@v2
         
@@ -191,8 +195,8 @@ jobs:
             cd backend
             git submodule update --init --recursive
             git fetch --tags
-            git checkout v${BACKEND_IMAGE_VERSION}
-
+            git checkout v${CURRENT_BACKEND_IMAGE_VERSION}
+      
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
@@ -205,14 +209,14 @@ jobs:
 
       - name: Build and push incnv-backend Docker image
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.DOCKER_USERNAME }}/incnv-backend:${BACKEND_IMAGE_VERSION} -t ${{ secrets.DOCKER_USERNAME }}/incnv-backend:latest ./backend --push
+          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.DOCKER_USERNAME }}/incnv-backend:${CURRENT_BACKEND_IMAGE_VERSION} -t ${{ secrets.DOCKER_USERNAME }}/incnv-backend:latest ./backend --push
 
           
   add-tag-version:
     runs-on: ubuntu-latest
-    needs: [check-updated-version, create-frontend-image, create-backend-image]
+    needs: [check-updated-app-version, create-frontend-image, create-backend-image]
     env:
-      CURRENT_APP_VERSION: ${{ needs.check-updated-version.outputs.CURRENT_APP_VERSION }}
+      CURRENT_APP_VERSION: ${{ needs.check-updated-app-version.outputs.CURRENT_APP_VERSION }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

@@ -1,4 +1,3 @@
-version: '2.0.2'
 services:
   incnv-frontend:
     image: saowwapark/incnv-frontend:2.4.0
