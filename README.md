@@ -91,7 +91,7 @@ From code above, inCNV configuration has details;
 
 ## Demo
 
-Users can download demo input files provided at [demo](https://github.com/saowwapark/inCNV/tree/master/demo-data).
+Users can download demo input files provided at [demo](https://github.com/saowwapark/inCNV/tree/main/demo-data).
 
 We modified the results files from _Zare, F. et al._[1] before uploading them into inCNV. We keep only necessary data for inCNV analysis and reformat the remain data to match with a [pre-defined CNV tool template](#file-mapping).
 
@@ -103,7 +103,7 @@ On the contrary, the CNV types of CONTRA and VarScan2 were represented by log2 r
 ## Work flow
 
 inCNV has data flow diagram (DFD) as below;
-![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/overall_architecture.png)
+![Image](https://github.com/saowwapark/inCNV/blob/main/demo-images/overall_architecture.png)
 
 ## Input data preparation
 
@@ -126,14 +126,14 @@ TCGA-A7-A0CE	1	129080	134836	del
 ```
 
 _Upload component_
-![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/upload_file.png)
+![Image](https://github.com/saowwapark/inCNV/blob/main/demo-images/upload_file.png)
 
 The CNV result files have to be plain text with tab-delimitted format. The contents need to have at least 5 columns which having the meanings of sample name, chromosome, start position, end position and CNV type.
 
 ### File mapping
 
 The ‘CNV tool mapping’ allows users to define input file formats, which will be used to map with the CNV results generated from any CNV detector tools. Users, however, need to reformat the result files to match with inCNV file template described below so that inCNV can understand the files.  
-![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/file_mapping.png)
+![Image](https://github.com/saowwapark/inCNV/blob/main/demo-images/file_mapping.png)
 
 - **Header column mapping:** The header columns consist of 'SAMPLE NAME', 'CHROMOSOME', 'START POSITION', 'END POSITION', and 'CNV TYPE'. Users have to map column of any result file to them. For example, if a result file represents sample name with 'sample', we will set 'SAMPLE NAME' with 'sample'. If a result file represents chromosome with 'chr', we will set 'CHROMOSOME' with 'chr'.
 - **Data field mapping:** The data fields needed to be mapped consist of 'CHROMOSOME22', 'DUPLICATION', and 'DELETION'. Users have to map content of any result file to them. For example, if a result file represents chromosome 22 with '22', we will set 'CHROMOSOME22' with '22'. If a result file represents duplication type of CNV with 'dup', we will set 'DUPLICATION' with 'dup'.\
@@ -143,7 +143,7 @@ The ‘CNV tool mapping’ allows users to define input file formats, which will
 
 The ‘sample set’ allows users to define a group of samples they are interested in. At this component, users can indicate a set name, description and sample names of any sample set.
 
-![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/sample_set.png)
+![Image](https://github.com/saowwapark/inCNV/blob/main/demo-images/sample_set.png)
 
 - The sample names have to match with data in 'SAMPLE NAME' column of the given result file.
 
@@ -152,7 +152,7 @@ The ‘sample set’ allows users to define a group of samples they are interest
 Users have to choose interesting criteria to analyze.
 
 - **individaul sample analysis:** criteria namely a reference genome, a sample set, a sample name, many files, a CNV type and a chromosome.
-  ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_configure.png)
+  ![Image](https://github.com/saowwapark/inCNV/blob/main/demo-images/individual_configure.png)
 
 - **multiple sample analysis:** criteria namely a reference genome, a sample set, many sample names, one file, a CNV type and a chromosome.
 
@@ -169,17 +169,17 @@ In this module, inCNV can help:
 - finding CNVs not previously reported in case inCNV provides common overlapping CNVs but not match with DGV.
 - providing the CNV flanking region extraction which will extract the left and right flanking sequences of the CNV that can be used by biologists for primer design.\
   _Example_
-  ![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_sample_analysis.png)
+  ![Image](https://github.com/saowwapark/inCNV/blob/main/demo-images/individual_sample_analysis.png)
 
 Moreover, when users hover or click at any charts, they will show pop-up dialog data belows;\
 _CNV Tool dialog showing inputted-file CNV_
-![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_cnv_tool_dialog.png)
+![Image](https://github.com/saowwapark/inCNV/blob/main/demo-images/individual_cnv_tool_dialog.png)
 
 _merged CNV dialog showing integrated CNV_
-![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_merged_dialog.png)
+![Image](https://github.com/saowwapark/inCNV/blob/main/demo-images/individual_merged_dialog.png)
 
 _selected CNV dialog showing chosen CNV to export_
-![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/individual_selected_dialog.png)
+![Image](https://github.com/saowwapark/inCNV/blob/main/demo-images/individual_selected_dialog.png)
 
 ### Multiple sample analysis
 
@@ -197,7 +197,7 @@ In this module, inCNV can help:
   5. Then, if we can find enough the number of overlapping CNVs including our target’s CNVs, we may predict that the target is potential to have a disease and we need to perform biological wet lap to confirm again.
 
 _Example_
-![Image](https://github.com/saowwapark/inCNV/blob/master/demo-images/multiple_sample_analysis.png)
+![Image](https://github.com/saowwapark/inCNV/blob/main/demo-images/multiple_sample_analysis.png)
 
 Moreover, when users hover or click at any chart, they will pop-up dialog like the way in Individual sample analysis
 
