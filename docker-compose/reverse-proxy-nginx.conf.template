@@ -22,7 +22,7 @@ http {
             send_timeout    3600;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
-            proxy_pass http://incnv-backend:${API_PORT}/api/;
+            proxy_pass http://incnv-backend:${BACKEND_DOCKER_API_PORT}/api/;
         }
 
         location / {
@@ -32,7 +32,8 @@ http {
             send_timeout    3600;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
-            proxy_pass http://incnv-frontend:${FRONTEND_PORT};
+            
+            proxy_pass http://incnv-frontend:${FRONTEND_DOCKER_PORT};
         }
     }
 

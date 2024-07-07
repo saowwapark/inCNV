@@ -6,9 +6,9 @@ services:
     networks:
       - incnv-network
     ports:
-      - ${FRONTEND_PORT}
+      - ${FRONTEND_DOCKER_PORT}
     environment:
-      - FRONTEND_PORT=${FRONTEND_PORT}
+      - FRONTEND_PORT=${FRONTEND_DOCKER_PORT}
     command: /bin/sh -c "envsubst '$${FRONTEND_PORT}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
   
   incnv-backend:
@@ -17,15 +17,14 @@ services:
     restart: always
     environment:
       - NODE_ENV=prod
-      - PORT=${API_PORT}
+      - PORT=${BACKEND_DOCKER_API_PORT}
       - HOST=0.0.0.0
       - DB_HOST=${DATABASE_HOST}
-      - DB_PORT=${DATABASE_PORT}
+      - DB_PORT=${DATABASE_DOCKER_PORT}
       - DB_USER=${DATABASE_USER_NAME}
       - DB_PASSWORD=${DATABASE_PASSWORD}
-      - UPDATE_BIO_DATA_SCHEDULE="0 0 * * *"
     ports:
-      - ${API_PORT}
+      - ${BACKEND_EXTERNAL_API_PORT}:${BACKEND_DOCKER_API_PORT}
     networks:
       - incnv-network
     volumes:
@@ -44,7 +43,7 @@ services:
     volumes:
       - databases-volume:/var/lib/mysql
     ports:
-      - 7004:3306
+      - ${DATABASE_EXTERNAL_PORT}:${DATABASE_DOCKER_PORT}
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost","-u","root","--password=${DATABASE_PASSWORD}"]
       timeout: 20s
@@ -64,9 +63,9 @@ services:
       - ./reverse-proxy-nginx.conf.template:/etc/nginx/reverse-proxy-nginx.conf.template
     environment:
       - NGINX_PORT=${NGINX_PORT}
-      - FRONTEND_PORT=${FRONTEND_PORT}
-      - API_PORT=${API_PORT}
-    command: /bin/sh -c "envsubst '$${NGINX_PORT} $${FRONTEND_PORT} $${API_PORT}' < /etc/nginx/reverse-proxy-nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+      - FRONTEND_DOCKER_PORT=${FRONTEND_DOCKER_PORT}
+      - BACKEND_DOCKER_API_PORT=${BACKEND_DOCKER_API_PORT}
+    command: /bin/sh -c "envsubst '$${NGINX_PORT} $${FRONTEND_DOCKER_PORT} $${BACKEND_DOCKER_API_PORT}' < /etc/nginx/reverse-proxy-nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
 
 volumes:
   databases-volume:
