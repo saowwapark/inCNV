@@ -12,7 +12,7 @@ services:
     command: /bin/sh -c "envsubst '$${FRONTEND_PORT}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
   
   incnv-backend:
-    image: saowwapark/incnv-backend:2.3.0
+    image: saowwapark/incnv-backend:2.3.1
     container_name: incnv-backend
     restart: always
     environment:
