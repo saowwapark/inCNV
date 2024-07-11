@@ -2,7 +2,11 @@
 
 ## What is inCNV
 
-inCNV is a web-based application accepting multiple CNV-tool results as input, integrate and prioritize captured CNVs with user-friendly interface. It can help users analyze the importance of captured CNVs by annotating CNVs with genetic data from Ensembl, Database of Genomic Variants (DGV), ClinVar and Online Mendelian Inheritance in Man (OMIM) including their flanking sequences. Moreover, users can select interesting CNVs and export them as a plain text format to do further experimentally bio wet lab.
+The tool in the research paper published in the SAGE journal, [inCNV: An Integrated Analysis Tool for Copy Number Variation on Whole Exome Sequencing](https://journals.sagepub.com/doi/full/10.1177/1176934320956577).
+
+The demo shows at `https://incnv.pintle.app`. The user name is `test@gmail.com` and password is `123456`. You can register your account and upload your files to play inCNV but the files will be expired in some peroid of time. More importantly, you need to remember your password. inCNV don't have the forget password feature. (I'm sorry. This part is still implementation).
+
+inCNV is a web-based application accepting multiple CNV-tool results as input, integrate and prioritize captured CNVs with user-friendly interface. It help users analyze the importance of captured CNVs by annotating CNVs with genetic data from Ensembl, Database of Genomic Variants (DGV), ClinVar and Online Mendelian Inheritance in Man (OMIM) including their flanking sequences. Moreover, users can select interesting CNVs and export them as a plain text format to do further experimentally bio wet lab.
 
 inCNV devide analyses into 2 modules: (1) Individual sample analysis, (2) Multiple sample analysis
 
@@ -11,17 +15,13 @@ inCNV devide analyses into 2 modules: (1) Individual sample analysis, (2) Multip
 
 ## Impementation
 
-inCNV was designed as a three-layer architecture with the (1) Frontend, (2) Backend, and (3) Database. They are build as Docker images and controlled with Docker compose and Nginx.
+Designed as a three-layer architecture with the (1) Frontend, (2) Backend, and (3) Database. They are build as Docker images and controlled with Docker compose and Nginx.
 
 - **Frontend:**
-  The frontend was developed by Angular framework, Angular material UI component and d3.js library. The current version of inCNV supports Chrome, Opera, and Safari browsers.
-
-  *We implement it as submodule of this repository (inCNV). To see the source code, please visit [incnv-frontend](https://github.com/saowwapark/incnv-frontend).* 
+  Developed by Angular framework, Angular material UI component and d3.js library. *To see the source code, please visit [incnv-frontend](https://github.com/saowwapark/incnv-frontend).* 
 
 - **Backend:**
-  We used Node.js with typescript and express framework for the backend development. Moreover, the backend was adopted with some extension for reading FASTA file with _indexedfasta-js_ package (version 1.0.12) from JBrowse[2].
-  
-  *We implement it as submodule of this repository (inCNV). To see the source code, please visit [incnv-backend](https://github.com/saowwapark/incnv-backend).*
+  Developed by Node.js and Express framework. The backend was adopted with some extension for reading FASTA file with _indexedfasta-js_ package (version 1.0.12) from JBrowse[2]. *To see the source code, please visit [incnv-backend](https://github.com/saowwapark/incnv-backend).*
 
 - **Database:**
   inCNV acquired biological data from several sources in order to attach biological significance to the captured CNVs. These data were reformatted and linked together for CNV annotations. Therefore, we can apply them to align and visualize the given CNVs in the analysis result page. The public databases incorporated into inCNV included the UCSC26, DGV, ClinVar, Ensembl and HGNC.
@@ -43,7 +43,7 @@ inCNV was designed as a three-layer architecture with the (1) Frontend, (2) Back
 ## Installation
 Installing inCNV is straightforward as we have set up everything for you. There is no need to install or build the source code yourself. We have created all the necessary Docker images [here](https://hub.docker.com/r/saowwapark/incnv-frontend).
 
-No need to clone the entire repository. Simply copy the [docker-compose directory](https://github.com/saowwapark/inCNV/tree/main/docker-compose) which includes of `docker-compose.yml` and `.env`, and then run `docker-compose.yml`.
+No need to clone the entire repository. Simply copy the [docker-compose directory](https://github.com/saowwapark/inCNV/tree/main/docker-compose) which includes of `docker-compose.yml`, `.env` and `reverse-proxy-nbinx.conf.template`. Then run `docker-compose.yml`.
 
 1. Clone git.
 ```
@@ -220,9 +220,9 @@ From code above;
 - To change the port for accessing inCNV in a browser, modifying `NGINX_EXTERNAL_PORT` variable in `.env` file. For to open inCNV at `http://localhost:4008`, set `NGINX_EXTERNAL_PORT=4008`
 
 
-## Demo
+## Demo Data
 
-Users can download demo input files provided at [demo](https://github.com/saowwapark/inCNV/tree/main/demo-data).
+Users can download demo input files [here](./demo-data).
 
 We modified the results files from _Zare, F. et al._[1] before uploading them into inCNV. We keep only necessary data for inCNV analysis and reformat the remain data to match with a [pre-defined CNV tool template](#file-mapping).
 
@@ -240,9 +240,9 @@ inCNV has data flow diagram (DFD) as below;
 
 ### Uploaded files
 
-Before using inCNV, users have to upload CNV results from any CNV detector tool that matches with the pre-defined [CNV tool mapping](#file-mapping) and pre-defined [sample set](#sample-set).\
+Before using inCNV, users have to upload CNV results from any CNV detector tool that matches with the pre-defined [CNV tool mapping](#file-mapping) and pre-defined [sample set](#sample-set).
 
-_Example: some part of CNV detection tool named CONTRA_
+Example: some part of CNV detection tool named CONTRA
 
 ```
 sample	chr	start	end	cnv_type
@@ -256,7 +256,7 @@ TCGA-A7-A0CE	1	69090	70008	del
 TCGA-A7-A0CE	1	129080	134836	del
 ```
 
-_Upload component_
+Upload component
 ![Image](./demo-images/upload_file.png)
 
 The CNV result files have to be plain text with tab-delimitted format. The contents need to have at least 5 columns which having the meanings of sample name, chromosome, start position, end position and CNV type.
@@ -295,42 +295,52 @@ use case
 ### Individual sample analysis
 
 In this module, inCNV can help:
+- Finding the more precise CNVs by integrating the results of multiple CNV detector tools on one sample.
+- Finding CNVs not previously reported in case inCNV provides common overlapping CNVs but not match with DGV.
+- Providing the CNV flanking region extraction which will extract the left and right flanking sequences of the CNV that can be used by biologists for primer design.
 
-- finding the more precise CNVs by integrating the results of multiple CNV detector tools on one sample.
-- finding CNVs not previously reported in case inCNV provides common overlapping CNVs but not match with DGV.
-- providing the CNV flanking region extraction which will extract the left and right flanking sequences of the CNV that can be used by biologists for primer design.\
-  _Example_
-  ![Image](./demo-images/individual_sample_analysis.png)
+>>>Example
+![Image](./demo-images/individual_sample_analysis.png)
 
-Moreover, when users hover or click at any charts, they will show pop-up dialog data belows;\
-_CNV Tool dialog showing inputted-file CNV_
+Moreover, when users hover or click at any charts, they will show pop-up dialog data belows.
+
+>>>CNV Tool dialog showing inputted-file CNV
 ![Image](./demo-images/individual_cnv_tool_dialog.png)
 
-_merged CNV dialog showing integrated CNV_
+>>>Merged CNV dialog showing integrated CNV
 ![Image](./demo-images/individual_merged_dialog.png)
 
-_selected CNV dialog showing chosen CNV to export_
+>>>Selected CNV dialog showing chosen CNV to export
 ![Image](./demo-images/individual_selected_dialog.png)
+
+>>>Clicking at any bioinformatic green tag button linking to external datasource page.
+![Image](./demo-images/tag_link.png)
+
+>>>A Ensembl page from the green tag, `CLIP4`.
+![Image](./demo-images/ensembl_external_link.png)
+
+>>>A DGV page from the green tag, `nsv2658`.
+![Image](./demo-images/dgv_external_link.png)
+
+>>>An OMIM searching page from the green tag, `613014`
+![Image](./demo-images/omim_external_link.png)
 
 ### Multiple sample analysis
 
 In this module, inCNV can help:
-
-- finding the more precise CNVs by integrating the CNV results of multiple samples identified by a CNV tool.
-- finding the relationship between the given group of samples having the same disease.
-- finding common CNVs within a group of samples having the same disease or de novo CNVs of a sample with in the same family or of the given sample set.
+- Finding the more precise CNVs by integrating the CNV results of multiple samples identified by a CNV tool.
+- Finding the relationship between the given group of samples having the same disease.
+- Finding common CNVs within a group of samples having the same disease or de novo CNVs of a sample with in the same family or of the given sample set.
   - To do this, users can filter out the common CNVs and explore whether the remaining CNVs are unique for a specific sample and/or associated with the disease
-- finding a targeted sample is potential to have a specific disease. This can be done by the following steps:
+- Finding a targeted sample is potential to have a specific disease. This can be done by the following steps:
   1. combining CNV results of our target with the results and of a sample set which having the same disease.
   2. searching genes related to specific disease.
   3. searching our target.
   4. searching the most common overlapping samples that include our target (our interesting sample).
   5. Then, if we can find enough the number of overlapping CNVs including our target’s CNVs, we may predict that the target is potential to have a disease and we need to perform biological wet lap to confirm again.
 
-_Example_
+Example
 ![Image](./demo-images/multiple_sample_analysis.png)
-
-Moreover, when users hover or click at any chart, they will pop-up dialog like the way in Individual sample analysis
 
 ## References
 
