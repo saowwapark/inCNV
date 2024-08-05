@@ -1,8 +1,17 @@
 # inCNV
+Excited to share our latest tool, inCNV, designed for integrated analysis of Copy Number Variations (CNVs) on Whole Exome Sequencing data. Our tool provides researchers with a comprehensive solution to analyze CNVs effectively.
+
+🔬 Explore inCNV: [https://incnv.pintle.app](https://incnv.pintle.app)    
+📚 Check out our publication: [inCNV: An Integrated Analysis Tool for Copy Number Variation on Whole Exome Sequencing](https://journals.sagepub.com/doi/full/10.1177/1176934320956577)  
+📂 GitHub Repository: [here](https://github.com/saowwapark/inCNV)  
+
+Join us in advancing genomic research and improving the understanding of genetic variations. #Genomics #Bioinformatics #CNV #Research
 
 ## Demo
-Please visit `https://incnv.pintle.app`.
-The user name is `test@gmail.com` and password is `123456`.
+Website: [https://incnv.pintle.app](https://incnv.pintle.app)  
+User name: `test@gmail.com`.  
+Password: `123456`.
+
 You can register your account and upload your files to play inCNV but the files will be expired in some peroid of time. More importantly, you need to remember your password. inCNV don't have the forget password feature. (I'm sorry. This part is still implementation).
 
 ## What is inCNV
