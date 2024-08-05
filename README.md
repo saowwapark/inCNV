@@ -1,10 +1,13 @@
 # inCNV
 
+## Demo
+Please visit `https://incnv.pintle.app`.
+The user name is `test@gmail.com` and password is `123456`.
+You can register your account and upload your files to play inCNV but the files will be expired in some peroid of time. More importantly, you need to remember your password. inCNV don't have the forget password feature. (I'm sorry. This part is still implementation).
+
 ## What is inCNV
 
 The tool in the research paper published in the SAGE journal, [inCNV: An Integrated Analysis Tool for Copy Number Variation on Whole Exome Sequencing](https://journals.sagepub.com/doi/full/10.1177/1176934320956577).
-
-The demo shows at `https://incnv.pintle.app`. The user name is `test@gmail.com` and password is `123456`. You can register your account and upload your files to play inCNV but the files will be expired in some peroid of time. More importantly, you need to remember your password. inCNV don't have the forget password feature. (I'm sorry. This part is still implementation).
 
 inCNV is a web-based application accepting multiple CNV-tool results as input, integrate and prioritize captured CNVs with user-friendly interface. It help users analyze the importance of captured CNVs by annotating CNVs with genetic data from Ensembl, Database of Genomic Variants (DGV), ClinVar and Online Mendelian Inheritance in Man (OMIM) including their flanking sequences. Moreover, users can select interesting CNVs and export them as a plain text format to do further experimentally bio wet lab.
 
