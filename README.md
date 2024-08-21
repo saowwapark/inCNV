@@ -9,7 +9,7 @@ Join us in advancing genomic research and improving the understanding of genetic
 
 ## Demo
 Website: [https://incnv.pintle.app](https://incnv.pintle.app)  
-User name: `test@gmail.com`.  
+User name: `test@mail.com`.  
 Password: `123456`.
 
 You can register your account and upload your files to play inCNV but the files will be expired in some peroid of time. More importantly, you need to remember your password. inCNV don't have the forget password feature. (I'm sorry. This part is still implementation).
